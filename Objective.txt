@@ -1,0 +1,113 @@
+Objective:
+=> Build a multi-object CRM system where each user can manage their own:
+		Contacts
+
+		Companies
+
+		Deals
+
+# Each of these entities should be related (e.g., a Deal is linked to a Contact and a Company), and data must be 
+Core Functionalities
+	1. User Authentication (Basic Module)
+		Register, login, logout (standard)
+
+		Session-based authentication
+
+		All data created will be owned by the logged-in user only
+
+
+	2. Companies Module
+		Create, Edit, Delete, View Companies
+
+		Properties: Company Name, Industry, Location, Notes
+
+		Can view all contacts and deals linked to the company
+
+
+	3. Contacts Module
+		Create, Edit, Delete, View Contacts
+
+		Properties: Full Name, Email, Phone, Linked Company
+
+		A contact must belong to a company
+
+		Each contact is linked to the user and associated company
+
+
+	4. Deals Module
+		Create, Edit, Delete, View Deals
+
+		Properties: Title, Value, Stage (e.g., Lead, Negotiation, Won, Lost), Linked Contact, Linked Company
+
+		Each deal must be associated with both a contact and company
+
+		View deals by stage, company, or contact
+
+
+
+# CRM System - Entity-Relationship Diagram
+
+This document outlines the database schema for the CRM system.
+
+## Diagram
+
+```mermaid
+erDiagram
+    USERS {
+        int user_id PK
+        varchar username
+        varchar email
+        varchar password_hash
+        datetime created_at
+    }
+
+    COMPANIES {
+        int company_id PK
+        int user_id FK "Owner of the company"
+        varchar name
+        varchar industry
+        varchar location
+        text notes
+        datetime created_at
+    }
+
+    CONTACTS {
+        int contact_id PK
+        int user_id FK "Owner of the contact"
+        int company_id FK "Company the contact belongs to"
+        varchar full_name
+        varchar email
+        varchar phone
+        datetime created_at
+    }
+
+    DEALS {
+        int deal_id PK
+        int user_id FK "Owner of the deal"
+        int contact_id FK "Contact associated with the deal"
+        int company_id FK "Company associated with the deal"
+        varchar title
+        decimal value
+        enum stage "e.g., Lead, Negotiation, Won, Lost"
+        datetime created_at
+    }
+
+    USERS ||--o{ COMPANIES : "owns"
+    USERS ||--o{ CONTACTS : "owns"
+    USERS ||--o{ DEALS : "owns"
+
+    COMPANIES ||--o{ CONTACTS : "has"
+    COMPANIES ||--o{ DEALS : "has"
+
+    CONTACTS ||--o{ DEALS : "is part of"
+```
+
+## Relationships Explained
+
+- **Users to Others**: A `USER` can have many `COMPANIES`, `CONTACTS`, and `DEALS`. The `user_id` foreign key in each of the other tables establishes this ownership.
+- **Company to Contacts/Deals**: A `COMPANY` can have many `CONTACTS` and many `DEALS`.
+- **Contact to Deals**: A `CONTACT` can be associated with many `DEALS`.
+- **Required Associations**:
+    - A `CONTACT` must belong to a `COMPANY` (`company_id` is a required foreign key).
+    - A `DEAL` must be linked to both a `CONTACT` and a `COMPANY` (`contact_id` and `company_id` are required foreign keys).
+

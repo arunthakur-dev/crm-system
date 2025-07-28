@@ -1,0 +1,148 @@
+/* ======= Global Styles ======= */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    background-color: #f0f4f8;
+}
+
+/* ======= Navbar ======= */
+.navbar {
+    background-color: #2c3e50; /* Blue */
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.navbar-right {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.username-box {
+    background-color: #ffffff;
+    color: #0066cc;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.logout-box {
+    background-color: #ff4d4d;
+    color: white;
+    padding: 6px 12px;
+    margin-right: 50px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.logout-box:hover {
+    background-color: #cc0000;
+}
+
+/* ======= Layout Container ======= */
+.container {
+    display: flex;
+    min-height: 100vh;
+    padding-top: 60px; /* to offset navbar height */
+}
+
+/* ======= Sidebar ======= */
+.sidebar {
+    width: 250px;
+    background-color: #2c3e50; /* Blue variant */
+    color: white;
+    padding: 20px;
+    position: fixed;
+    top: 60px; /* below navbar */
+    left: 0;
+    margin-top: 20px;
+    height: calc(100vh - 60px);
+}
+
+.sidebar .logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #fff;
+}
+
+.sidebar .nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar .nav ul li {
+    margin: 20px 0;
+}
+
+.sidebar .nav ul li a {
+    color: #cce0ff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.sidebar .nav ul li a:hover {
+    color: #ffffff;
+}
+
+/* ======= Main Content ======= */
+.main-content {
+    margin-left: 350px;
+    padding: 30px;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+/* ======= Dashboard Sections ======= */
+.dashboard-section {
+    margin-bottom: 40px;
+}
+
+.dashboard-section h2 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.item-list {
+    background: #ffffff;
+    padding: 15px;
+    border-left: 4px solid #2c3e50;
+    border-radius: 6px;
+    list-style-type: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.item-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.item-list li:last-child {
+    border-bottom: none;
+}
+
+/* ======= Footer ======= */
+.footer {
+    background-color: #2c3e50;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    margin-top: 30px;
+}
