@@ -3,8 +3,8 @@ require_once __DIR__ . '/../../config/session-config.php';
 require_once __DIR__ . '/../../config/dbh.php';
 require_once __DIR__ . '/../../models/contacts-model.php';
 
-$contactModel = new ContactModel();
-$contacts = $contactModel->getUserContacts($_SESSION['user_id']);
+// $contactModel = new ContactModel();
+// $contacts = $contactModel->getUserContacts($_SESSION['user_id']);
 ?>
 
 <!DOCTYPE html>
@@ -12,7 +12,7 @@ $contacts = $contactModel->getUserContacts($_SESSION['user_id']);
 <head>
     <meta charset="UTF-8">
     <title>Your Contacts</title>
-    <link rel="stylesheet" href="../../assets/css/contacts.css">
+    <link rel="stylesheet" href="/../../public/assets/css/contacts.css">
 </head>
 <body>
 
@@ -24,7 +24,6 @@ $contacts = $contactModel->getUserContacts($_SESSION['user_id']);
             <a href="create-contact.php" class="btn">+ Create Contact</a>
         </div>
     </header>
-
     <div class="table-container">
         <table>
             <thead>

@@ -1,0 +1,118 @@
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 500px;
+    height: 100%;
+    background: #f9f9f9;
+    box-shadow: -2px 0 10px rgba(50, 45, 45, 0.2);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.sidebar.visible {
+    transform: translateX(0);
+}
+
+.sidebar.hidden {
+    display: none;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #0099cc;
+    color: white;
+    height: 40px;
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.sidebar-header h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.close-sidebar-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-sidebar-btn:hover {
+    color: #ffdddd;
+}
+.sidebar-form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px; /* Neat spacing between form groups */
+    margin-top: 10px;
+}
+
+.sidebar-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar-form label {
+    font-weight: 600;
+    color: #242323;
+    font-size: 18px;
+    margin-bottom: 2px;
+}
+
+.sidebar-form input,
+.sidebar-form select,
+.sidebar-form textarea {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    font-family: inherit;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    transition: border 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+.sidebar-form input:focus,
+.sidebar-form select:focus,
+.sidebar-form textarea:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+
+.sidebar-form textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+.sidebar-form button[type="submit"] {
+    width: auto;
+    padding: 12px 20px;
+    margin-top: 20px;
+    background: #28a745;
+    color: white;
+    font-weight: 600;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    align-self: flex-start;
+}
+
+.sidebar-form button[type="submit"]:hover {
+    background: #218838;
+}

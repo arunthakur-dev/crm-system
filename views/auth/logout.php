@@ -1,12 +1,19 @@
 <?php
 session_start();
 
-// Unset all of the session variables.
-session_unset();
+// Unset all session variables
+$_SESSION = []; // Clear manually
+session_unset(); // Extra safety
 
-// Finally, destroy the session.
-session_destroy();
-
-// Redirect to login page
-header('Location: ../../public/index.php');
-exit();
+// Destroy session
+if (session_destroy()) {
+    // Verify session is destroyed
+    if (empty($_SESSION)) {
+        header('Location: ../../public/index.php');
+        exit();
+    } else {
+        echo "Error: Session could not be destroyed completely.";
+    }
+} else {
+    echo "Error: Session destruction failed.";
+}

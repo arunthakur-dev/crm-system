@@ -1,0 +1,151 @@
+/* Base Styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #d7e5e4;
+}
+
+/* Wrapper Container */
+.wrapper {
+    max-width: 1300px;
+    margin: 0 auto;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #139cbe;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    height: 40px;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.navbar h2 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.navbar nav a {
+    color: white;
+    margin-left: 15px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.navbar nav a:hover {
+    text-decoration: underline;
+    color: #090909;
+}
+
+.username-box {
+    margin-right: 15px;
+}
+
+/* Main Content */
+.main-content {
+    padding: 30px 20px;
+    flex: 1;
+}
+
+/* Dashboard Grid Layout */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    justify-content: space-between;
+}
+
+@media (max-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Individual Box Styling */
+.dashboard-box {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.dashboard-box h3 {
+    margin-top: 0;
+    font-size: 1.2rem;
+    color: #333;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+.center-row {
+    justify-content: center;
+}
+
+/* Ensures Deals Box is not centered but aligns left */
+.deals-box {
+    max-width: 580px;
+    margin-top: 30px;
+}
+
+.welcome-box {
+    max-width: 700px;
+    margin: 0 auto 30px auto;
+    padding: 30px;
+    background-color: #f4f8ff;
+    border-left: 6px solid #139cbe;
+    border-right: 6px solid #139cbe;;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.welcome-box h2 {
+    margin-bottom: 10px;
+}
+
+.create-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: #139cbe;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.create-btn:hover {
+    background-color: #5fdaf8;
+}
+
+/* List inside each box */
+.item-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.item-list li {
+    margin-bottom: 6px;
+    padding: 8px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    font-size: 0.95rem;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: 10px 0;
+    background-color: #139cbe;
+    font-size: 14px;
+}

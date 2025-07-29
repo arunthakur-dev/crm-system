@@ -12,7 +12,7 @@ $deals = $dealModel->getUserDeals($_SESSION['user_id']);
 <head>
     <meta charset="UTF-8">
     <title>Your Deals</title>
-    <link rel="stylesheet" href="../../assets/css/deals.css">
+    <link rel="stylesheet" href="../../public/assets/css/deals.css">
 </head>
 <body>
 

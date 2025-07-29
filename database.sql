@@ -18,13 +18,19 @@ CREATE TABLE users (
 CREATE TABLE companies (
     company_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
+    company_domain VARCHAR(255),
     name VARCHAR(255) NOT NULL,
+    owner VARCHAR(255),
     industry VARCHAR(255),
-    location VARCHAR(255),
+    country VARCHAR(100),
+    state VARCHAR(100),
+    postal_code VARCHAR(20),
+    employees INT,
     notes TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES USERS(user_id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
 
 --
 -- Table structure for table `contacts`

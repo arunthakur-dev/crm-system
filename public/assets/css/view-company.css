@@ -1,0 +1,122 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    background-color: #f7f9fb;
+}
+
+.company-view-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.company-sidebar {
+    width: 280px;
+    background: #fff;
+    border-right: 1px solid #e0e6ee;
+    padding: 20px;
+}
+
+.company-logo {
+    width: 60px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.company-header h2 {
+    margin: 10px 0 5px;
+}
+
+.company-actions {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.company-actions button {
+    background: #f0f4f8;
+    border: none;
+    padding: 8px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.company-sidebar-details h3 {
+    margin-top: 20px;
+    border-bottom: 1px solid #dcdfe3;
+    padding-bottom: 5px;
+}
+
+.company-main-content {
+    flex: 1;
+    padding: 30px;
+    background: #f7f9fb;
+}
+
+.company-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.company-tabs button {
+    padding: 10px 20px;
+    background: #eaf1f9;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.company-tabs .active-tab {
+    background-color: #d0e3f5;
+    font-weight: bold;
+}
+
+.summary-grid {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #d1dbe6;
+    border-bottom: 1px solid #d1dbe6;
+    padding: 20px 0;
+    margin-bottom: 25px;
+}
+
+.summary-grid div {
+    width: 30%;
+    border-left: 1px solid #d1dbe6;
+    padding-left: 20px;
+}
+
+.summary-grid div:first-child {
+    border-left: none;
+    padding-left: 0;
+}
+
+.activity-section {
+    background: #fff;
+    border: 1px solid #e0e6ee;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+
+.activity-section h3 {
+    margin-top: 0;
+}
+
+.activity-empty {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.activity-empty img {
+    width: 80px;
+    opacity: 0.5;
+}
+
+.linked-section {
+    background: #fff;
+    border: 1px solid #e0e6ee;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
