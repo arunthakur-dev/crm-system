@@ -1,0 +1,22 @@
+step-by-step commands to add a new local project to a new GitHub repository 
+
+# Step 1: Navigate into your project directory
+cd path/to/your/project
+
+# Step 2: Initialize Git
+git init
+
+# Step 3: Add all files to staging
+git add .
+
+# Step 4: Commit the changes
+git commit -m "Initial commit"
+
+# Step 5: Add remote origin (replace URL with your repo's URL)
+git remote add origin https://github.com/your-username/your-repo.git
+
+# Step 6: Rename branch to main (if not already)
+git branch -M main
+
+# Step 7: Push code to GitHub
+git push -u origin main

@@ -18,35 +18,48 @@ VALUES('johndoe', 'john.doe@example.com',
 
 DESCRIBE users;
 SELECT * FROM users;
-DELETE from users where id=1;
+DELETE from users where user_id=1;
 DROP TABLE users;
+UPDATE users SET user_id = 1 WHERE user_id=4;
+
 
 
 CREATE TABLE companies (
     company_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
+    company_domain VARCHAR(255),
     name VARCHAR(255) NOT NULL,
+    owner VARCHAR(255),
     industry VARCHAR(255),
-    location VARCHAR(255),
+    country VARCHAR(100),
+    state VARCHAR(100),
+    postal_code VARCHAR(20),
+    employees INT,
     notes TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES USERS(user_id) 
-    ON DELETE CASCADE 
-    ON UPDATE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-INSERT INTO companies (user_id, name, industry, location, notes) VALUES
-(1, 'Innovate Inc.', 'Technology', 
-'San Francisco, CA', 'Leading provider of innovative tech solutions.'),
-(1, 'Global Exports', 'Logistics', 
-'New York, NY', 'Specializes in international shipping and supply chain management.'),
-(2, 'Creative Solutions', 'Marketing', 
-'Chicago, IL', 'A full-service digital marketing agency.'),
-(2, 'HealthFirst Clinic', 'Healthcare', 
-'Boston, MA', 'A primary care clinic with a focus on patient wellness.');
+INSERT INTO companies (
+    user_id, company_domain, name, owner, industry,
+    country, state, postal_code, employees, notes
+) VALUES
+(1, 'innovatek.com', 'Innovatek Solutions', 'Nikita Sharma', 'Computer Software', 'India', 'Maharashtra', '400001', 250, 'Focused on AI & ML-based enterprise tools.'),
+(1, 'greenmed.org', 'GreenMed Healthcare', 'Amitabh Rao', 'Healthcare', 'India', 'Delhi', '110001', 120, 'Specialized in green biotech medical innovations.'),
+(1, 'learnix.in', 'Learnix Academy', 'Priya Mehta', 'Education', 'India', 'Karnataka', '560002', 80, 'E-learning platform for coding and design.'),
+(1, 'craftpulse.net', 'CraftPulse', 'Rahul Dev', 'Arts and Crafts', 'India', 'Rajasthan', '302001', 60, 'Local artisans platform for handmade exports.'),
+(1, 'finbox.io', 'FinBox Ltd.', 'Isha Kapoor', 'Finance', 'India', 'Mumbai', '400703', 300, 'Startup for credit risk & financial analytics.');
 
+INSERT INTO companies (logo) VALUE ('company-default.png');
+
+DESCRIBE companies;
 SELECT * FROM companies;
+ALTER TABLE companies DROP COLUMN logo;
+ALTER TABLE companies ADD COLUMN phone VARCHAR(20) AFTER company_domain;
+ALTER TABLE companies ADD COLUMN logo varchar(255) AFTER phone;
 
+UPDATE companies SET user_id = 1 WHERE company_id=3;
+DROP TABLE companies;
 
 CREATE TABLE contacts (
     contact_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -54,7 +67,7 @@ CREATE TABLE contacts (
     company_id INT NOT NULL,
     full_name VARCHAR(255) NOT NULL,
     email VARCHAR(255),
-    phone VARCHAR(50),
+    phone VARCHAR(50), -- linked company
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES USERS(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (company_id) REFERENCES COMPANIES(company_id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -71,6 +84,8 @@ INSERT INTO contacts (user_id, company_id, full_name, email, phone) VALUES
 (2, 4, 'Frank Miller', 'frank.m@healthfirst.com', '444-555-7777');
 
 SELECT * FROM contacts;
+UPDATE contacts SET user_id = 1 WHERE contact_id=4;
+DROP TABLE contacts;
 
 CREATE TABLE deals (
     deal_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -94,7 +109,8 @@ INSERT INTO deals (user_id, contact_id, company_id, title, value, stage) VALUES
 (2, 4, 3, 'Q4 Marketing Campaign', 25000.00, 'Lead'),
 (2, 5, 4, 'Medical Equipment Supply', 120000.00, 'Lost');
 
+UPDATE deals SET user_id = 1 WHERE deal_id=3;
 SELECT * FROM deals;
-
+DROP TABLE deals;
 
 

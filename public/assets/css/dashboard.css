@@ -7,7 +7,7 @@ body {
 
 /* Wrapper Container */
 .wrapper {
-    max-width: 1300px;
+    max-width: 1500px;
     margin: 0 auto;
     background-color: white;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -45,6 +45,33 @@ body {
     color: #090909;
 }
 
+.navbar nav a.active {
+    background-color: white;
+    color: #139cbe;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-weight: bold;
+    box-shadow: 0 0 4px rgba(0,0,0,0.1);
+    transition: background-color 0.3s, color 0.3s;
+}
+.navbar nav a:hover.active {
+    background-color: #5fdaf8;
+    color: #090909;
+}
+
+/* Logout Box */
+.logout-box {
+    color: #ff4d4d;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+}
+.logout-box:hover {
+    background-color: #fff;
+    color: #ff4d4d !important;
+    border-radius: 5px;
+    padding: 8px 12px;
+}
 .username-box {
     margin-right: 15px;
 }

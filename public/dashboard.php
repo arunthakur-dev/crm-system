@@ -18,11 +18,11 @@ $userId = $_SESSION['user_id'];
 require_once __DIR__ . '/../models/companies-model.php';
 require_once __DIR__ . '/../models/contacts-model.php';
 require_once __DIR__ . '/../models/deals-model.php';
-// // $companyModel = new CompanyModel();
+$companyModel = new CompaniesModel();
 // $contactModel = new ContactModel();
 // $dealModel    = new DealModel();
 
-//$recentCompanies = $companyModel->getRecentCompanies($userId, 5);
+$recentCompanies = $companyModel->fetchRecentSortedCompanies($userId, 5);
 // $recentContacts  = $contactModel->getRecentContacts($userId, 5);
 // $recentDeals     = $dealModel->getRecentDeals($userId, 5);
 ?>
@@ -40,8 +40,20 @@ require_once __DIR__ . '/../models/deals-model.php';
 
 <div class="wrapper">
     <!-- Navbar with menu -->
-    <?php require_once __DIR__ . '/layouts/header.php'; ?>
+    <header class="navbar">
+        <h2>CRM Demo</h2>
+        <?php
+        $currentPage = basename($_SERVER['PHP_SELF']);
+        ?>
+        <nav class="nav">
+            <a href="dashboard.php" class="<?= $currentPage == 'dashboard.php' ? 'active' : '' ?>">Dashboard</a>
+            <a href="/../../views/companies/companies.php" class="<?= $currentPage == 'companies.php' ? 'active' : '' ?>">Companies</a>
+            <a href="/../../views/contacts/contacts.php" class="<?= $currentPage == 'contacts.php' ? 'active' : '' ?>">Contacts</a>
+            <a href="/../../views/deals/deals.php" class="<?= $currentPage == 'deals.php' ? 'active' : '' ?>">Deals</a>
+            <a href="/../../views/auth/logout.php" class="logout-box" style="color: #ff4d4d;">Logout</a>
+        </nav>
 
+    </header>
 
     <main class="main-content" id="main-content">
         <!-- Centered Welcome Box -->
@@ -57,14 +69,14 @@ require_once __DIR__ . '/../models/deals-model.php';
         <div class="dashboard-grid">
             <section class="dashboard-box">
                 <h3>Recent Companies</h3>
-                <ul class="item-list">
-                    <?php foreach ($recentCompanies as $company): ?>
-                        <li><?= htmlspecialchars($company['name']) ?> - <?= htmlspecialchars($company['industry']) ?></li>
-                    <?php endforeach; ?>
+                <ol class="item-list">
                     <?php if (empty($recentCompanies)): ?>
                         <li>No companies yet.</li>
                     <?php endif; ?>
-                </ul>
+                    <?php foreach ($recentCompanies as $company): ?>
+                        <li><strong>Company Name: </strong><?= htmlspecialchars($company['name']) ?>, <strong>Industry: </strong><?= htmlspecialchars($company['industry']) ?>,</li>
+                    <?php endforeach; ?>
+                </ol>
             </section>
             <section class="dashboard-box">
                 <h3>Recent Contacts</h3>
@@ -98,7 +110,10 @@ require_once __DIR__ . '/../models/deals-model.php';
         </div>     
     </main>
 
-    <?php require_once __DIR__ . '/layouts/footer.php'; ?>
+<!-- Footer -->
+    <footer class="footer">
+        <p>&copy; <?= date('Y') ?> CRM System. All rights reserved.</p>
+    </footer>
 
 </div>
 </body>

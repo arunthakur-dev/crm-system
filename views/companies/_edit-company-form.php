@@ -1,60 +1,45 @@
-<?php
-require_once __DIR__ . '/../../controllers/companies-controller.php';
-session_start();
+<!-- Edit Company Modal (Name, Domain, Phone) -->
+<div id="editCompanyModal" class="modal">
+    <div class="modal-content">   
+        <h2>Edit Company Details</h2>
+        <form action="/../../includes/update-company-inc.php" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="company_id" value="<?= $company['company_id'] ?>">
 
-if (!isset($_GET['id'], $_SESSION['user_id'])) {
-    http_response_code(403);
-    exit("Unauthorized access");
-}
+            <label for="company_name">Company Name</label>
+            <input type="text" id="company_name" name="company_name" value="<?= htmlspecialchars($company['name']) ?>" required>
 
-$companyId = (int) $_GET['id'];
-$userId = $_SESSION['user_id'];
+            <label for="company_domain">Domain</label>
+            <input type="text" id="company_domain" name="company_domain" value="<?= htmlspecialchars($company['company_domain']) ?>">
 
-$controller = new CompaniesController();
-$company = $controller->getCompanyById($companyId, $userId);
+            <label for="phone">Phone</label>
+            <input type="text" id="phone" name="phone" value="<?= htmlspecialchars($company['phone'] ?? '') ?>">
 
-if (!$company) {
-    http_response_code(404);
-    exit("Company not found or access denied.");
-}
-?>
+            <label for="company_logo">Upload New Logo</label>
+            <input type="file" id="company_logo" name="company_logo">
 
-<div class="sidebar visible" id="edit-company-sidebar">
-    <div class="sidebar-header blue-header">
-        <h2>Edit Company - <?= htmlspecialchars($company['name']) ?></h2>
-        <button class="close-sidebar-btn" onclick="closeSidebar()">✖</button>
+            <?php if (!empty($company['logo'])): ?>
+                <button type="submit" name="remove_logo" value="1" class="remove-logo-btn">Remove Logo</button>
+            <?php endif; ?>
+
+            <button type="submit" class="submit-btn">Save</button>
+            <button type="button" class="cancel-btn close-modal">Cancel</button>
+        </form>
     </div>
-    <form action="/includes/update-company-inc.php" method="POST">
-        <input type="hidden" name="company_id" value="<?= $company['company_id'] ?>">
-
-        <label>Company Domain</label>
-        <input type="text" name="company_domain" value="<?= htmlspecialchars($company['company_domain']) ?>">
-
-        <label>Company Name *</label>
-        <input type="text" name="name" required value="<?= htmlspecialchars($company['name']) ?>">
-
-        <label>Owner</label>
-        <input type="text" name="owner" value="<?= htmlspecialchars($company['owner']) ?>">
-
-        <label>Industry</label>
-        <input type="text" name="industry" value="<?= htmlspecialchars($company['industry']) ?>">
-
-        <label>Country</label>
-        <input type="text" name="country" value="<?= htmlspecialchars($company['country']) ?>">
-
-        <label>State</label>
-        <input type="text" name="state" value="<?= htmlspecialchars($company['state']) ?>">
-
-        <label>Postal Code</label>
-        <input type="text" name="postal_code" value="<?= htmlspecialchars($company['postal_code']) ?>">
-
-        <label>Employees</label>
-        <input type="number" name="employees" value="<?= htmlspecialchars($company['employees']) ?>">
-
-        <label>Notes</label>
-        <textarea name="notes"><?= htmlspecialchars($company['notes']) ?></textarea>
-
-        <br>
-        <button type="submit" name="update_company">Update Company</button>
-    </form>
 </div>
+
+<!-- Edit Single Field Modal -->
+<div id="editAboutFieldModal" class="modal">
+    <div class="modal-content">
+        <h2>Edit Field</h2>
+        <form id="aboutFieldForm" action="/../../includes/update-company-field-inc.php" method="POST">
+            <input type="hidden" name="company_id" value="<?= $company['company_id'] ?>">
+            <input type="hidden" name="field_name" id="field_name">
+            <label id="field_label" for="field_value">Field</label>
+            <input type="text" name="field_value" id="field_value" required>
+
+            <button type="submit" class="submit-btn">Save</button>
+            <button type="button" class="cancel-btn close-about-modal">Cancel</button>
+        </form>
+    </div>
+</div>
+

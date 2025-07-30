@@ -10,16 +10,49 @@ body {
     padding: 2rem;
 }
 
-.page-wrapper {
-    max-width: 1200px;
-    margin: auto;
+.alert {
+    position: relative;
+    padding: 14px 40px 14px 20px;
+    margin: 20px auto;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 15px;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #e6f4ea;
+    border-color: #2ecc71;
+    color: #2e7d32;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
+/* Dismiss button */
+.alert .close-btn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background: none;
+    border: none;
+    color: #2e7d32;
+    font-size: 18px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.alert .close-btn:hover {
+    color: #c0392b;
+}
+
+
 
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 5px;
 }
 
 header h1 {
@@ -34,7 +67,7 @@ header h1 {
 }
 
 .search-input {
-    padding: 0.6rem 1rem;
+    padding: 0.4rem 1rem;
     border: 1px solid #d9e0e7;
     border-radius: 4px;
     font-size: 1rem;
@@ -59,6 +92,7 @@ header h1 {
 .table-container {
     background-color: white;
     border-radius: 8px;
+    border: 2px solid #d1dbe5;
     box-shadow: -2 1px 3px rgba(158, 154, 154, 0.1);
     overflow-x: auto;
 }
@@ -115,4 +149,82 @@ tr:hover {
     table {
         font-size: 0.9rem;
     }
+}
+
+th button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 5px;
+}
+th a {
+    text-decoration: none;
+    color: #333;
+}
+
+th a:hover {
+    text-decoration: underline;
+}
+
+th a::after {
+    margin-left: 5px;
+    font-size: 0.8em;
+}
+
+.company-tabs-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #dcdcdc;
+}
+
+.record-count {
+    font-size: 14px;
+    color: #666;
+    padding: 10px 0;
+}
+
+.company-tabs {
+    display: flex;
+    border: 1px solid #dcdcdc;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.tab-link {
+    display: inline-block;
+    padding: 8px 16px;
+    font-size: 14px;
+    color: #333;
+    text-decoration: none;
+    background-color: #fff;
+    border-right: 1px solid #dcdcdc;
+    transition: background-color 0.2s;
+}
+
+.tab-link:last-child {
+    border-right: none;
+}
+
+.tab-link:hover {
+    background-color: #f3f3f3;
+}
+
+.tab-link.active {
+    background-color: #abb4b6;
+    font-weight: 600;
+    border: 1px solid #cbd6e2;
+    border-bottom: none;
+}
+
+/* Optional: make it look like a normal link */
+.link-button {
+    background: none;
+    border: none;
+    padding: 0;
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+    font: inherit;
 }

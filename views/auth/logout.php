@@ -9,7 +9,7 @@ session_unset(); // Extra safety
 if (session_destroy()) {
     // Verify session is destroyed
     if (empty($_SESSION)) {
-        header('Location: ../../public/index.php');
+        header('Location: login.php');
         exit();
     } else {
         echo "Error: Session could not be destroyed completely.";

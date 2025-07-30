@@ -12,7 +12,7 @@
         <input type="text" id="name" name="name" placeholder="Company Name" >
 
         <label for="owner">Company Owner</label>
-        <input type="text" id="owner" name="owner" placeholder="Owner's Name">
+        <input type="text" id="owner" name="owner" value="<?php echo htmlspecialchars($_SESSION['username']); ?>" placeholder="Owner's Name">
 
         <label for="industry">Industry</label>
         <select id="industry" name="industry"  >
