@@ -1,12 +1,12 @@
 <?php
 session_start();
-require_once __DIR__ . '/../config/dbh.php';
+require_once __DIR__ . '/../../config/dbh.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $companyId = $_POST['company_id'] ?? null;
-    $userId = $_SESSION['user_id'] ?? null;
+    $company_id = $_POST['company_id'] ?? null;
+    $user_id = $_SESSION['user_id'] ?? null;
 
-    if (!$companyId || !$userId) {
+    if (!$company_id || !$user_id) {
         die("Missing data.");
     }
 
@@ -18,8 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dbh = new Dbh();
     $pdo = $dbh->connect();
 
-    $stmt = $pdo->prepare("SELECT logo FROM companies WHERE company_id = ? AND user_id = ?");
-    $stmt->execute([$companyId, $userId]);
+    $stmt = $pdo->prepare("SELECT logo FROM companies WHERE  company_id = ? AND user_id = ?");
+    $stmt->execute([$company_id, $user_id]);
     $company = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$company) {
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $newLogo = $company['logo'];
 
     if ($removeLogo && $company['logo']) {
-        $logoPath = __DIR__ . '/../uploads/logos/' . $company['logo'];
+        $logoPath = __DIR__ . '/../../uploads/logos/' . $company['logo'];
         if (file_exists($logoPath)) unlink($logoPath);
         $newLogo = null;
     }
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $allowed = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
         if (!in_array($fileExt, $allowed)) die("Unsupported image format.");
 
-        $uploadDir = __DIR__ . '/../uploads/logos/';
+        $uploadDir = __DIR__ . '/../../uploads/logos/';
         if (!file_exists($uploadDir)) mkdir($uploadDir, 0777, true);
 
         $newFileName = 'logo_' . time() . '_' . rand(100, 999) . '.' . $fileExt;
@@ -60,10 +60,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $updateStmt = $pdo->prepare("UPDATE companies SET name = ?, company_domain = ?, phone = ?, logo = ? WHERE company_id = ? AND user_id = ?");
-    $updated = $updateStmt->execute([$name, $domain, $phone, $newLogo, $companyId, $userId]);
+    $updated = $updateStmt->execute([$name, $domain, $phone, $newLogo, $company_id, $user_id]);
 
     $_SESSION['flash_message'] = $updated ? "Company updated successfully." : "Update failed. Please try again.";
-    header("Location: ../views/companies/view-company.php?company_id=" . $companyId);
+    header("Location: /../../views/companies/view-company.php?company_id=" . $company_id);
     exit;
 } else {
     http_response_code(405);

@@ -1,25 +1,17 @@
 <?php
 require_once __DIR__ . '/../../config/session-config.php';
-require_once __DIR__ . '/../../includes/companies/view-company-inc.php';
-require_once __DIR__ . '/_edit-company-form.php';
-require_once __DIR__ . '/_delete-company-form.php';
-
-require_once __DIR__ . '/add-contact-form.php';
-require_once __DIR__ . '/add-company-form.php';
-require_once __DIR__ . '/add-deal-form.php';
+require_once __DIR__ . '/../../includes/contacts/view-contact-inc.php';
+require_once __DIR__ . '/_edit-contact-form.php';
+require_once __DIR__ . '/_delete-contact-form.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title><?= htmlspecialchars($company['name']) ?> | Company Details</title>
+    <title><?= htmlspecialchars($contact['first_name'] . ' ' . $contact['last_name']) ?> | Contact Details</title>
     <link rel="stylesheet" href="/../../public/assets/css/view-company.css">
     <link rel="stylesheet" href="/../../public/assets/css/dashboard.css">
-    <link rel="stylesheet" href="/../../public/assets/css/add-contact.css">
     <script defer src="/../../public/assets/js/edit-company.js"></script>
-    <script defer src="/../../public/assets/js/sidebar-toggle.js"></script>
-    <script defer src="/../../public/assets/js/sidebar-forms.js"></script>
-
 </head>
 <body>
     <div class="wrapper">
@@ -30,8 +22,8 @@ require_once __DIR__ . '/add-deal-form.php';
             ?>
             <nav class="nav">
                 <a href="/../../public/dashboard.php" class="<?= $currentPage == 'dashboard.php' ? 'active' : '' ?>">Dashboard</a>
-                <a href="companies.php" class="<?= $currentPage == 'view-company.php' ? 'active' : '' ?>">Companies</a>
-                <a href="../contacts/contacts.php" class="<?= $currentPage == 'contacts.php' ? 'active' : '' ?>">Contacts</a>
+                <a href="../companies/companies.php" class="<?= $currentPage == 'companies.php.php' ? 'active' : '' ?>">Companies</a>
+                <a href="contacts.php" class="<?= $currentPage == 'view-contact.php' ? 'active' : '' ?>">Contacts</a>
                 <a href="../deals/deals.php" class="<?= $currentPage == 'deals.php' ? 'active' : '' ?>">Deals</a>
                 <a href="../auth/logout.php" class="logout-box" style="color: #ff4d4d;">Logout</a>
             </nav>
@@ -42,19 +34,19 @@ require_once __DIR__ . '/add-deal-form.php';
         <!-- Header -->
         <div class="company-header" id="companyHeader">
             <div class="company-logo-wrapper">
-                <?php if (!empty($company['logo'])): ?>
-                    <img src="/uploads/logos/<?= htmlspecialchars($company['logo']) ?>" alt="Logo" class="company-logo">
+                <?php if (!empty($contact['logo'])): ?>
+                    <img src="/uploads/contacts/<?= htmlspecialchars($contact['logo']) ?>" alt="Logo" class="company-logo">
                 <?php else: ?>
-                    <img src="/public/assets/images/company-default.png" alt="Default Logo" class="company-logo">
+                    <img src="/uploads/contacts/contacts-default.jpg" alt="Default Logo" class="company-logo">
                 <?php endif; ?>
             </div>
 
             <div class="company-info">
-                <h2 class="company-name"><?= htmlspecialchars($company['name']) ?></h2>
-                <a href="http://<?= htmlspecialchars($company['company_domain']) ?>" target="_blank" class="company-domain">
-                    <?= htmlspecialchars($company['company_domain']) ?>
+                <h2 class="company-name"><?= htmlspecialchars($contact['first_name'] . ' ' . $contact['last_name']) ?></h2>
+                <a href="http://<?= htmlspecialchars($contact['email']) ?>" target="_blank" class="company-domain">
+                    <?= htmlspecialchars($contact['email']) ?>
                 </a>
-                <h2 class="phone"><?= htmlspecialchars($company['phone']) ?></h2>
+                <h2 class="phone"><?= htmlspecialchars($contact['phone']) ?></h2>
             </div>
 
             <!-- Floating edit button (visible on hover over ) -->
@@ -78,18 +70,17 @@ require_once __DIR__ . '/add-deal-form.php';
 
             <?php
             $fields = [
-                'owner' => 'Owner',
-                'industry' => 'Industry',
-                'country' => 'Country',
-                'state' => 'State',
-                'postal_code' => 'Postal Code',
-                'employees' => 'Number of Employees',
+                'email' => 'Email',
+                'contact_owner' => 'Owner',
+                'phone' => 'Phone',
+                'lifecycle_stage' => 'LifecycleStage',
+                'lead_status' => 'Lead Status',
             ];
 
             foreach ($fields as $field => $label):
-                $value = htmlspecialchars($company[$field]) ?: '--';
+                $value = htmlspecialchars($contact[$field]) ?: '--';
             ?>
-            <div class="editable-field" data-field="<?= $field ?>" data-value="<?= htmlspecialchars($company[$field]) ?>">
+            <div class="editable-field" data-field="<?= $field ?>" data-value="<?= htmlspecialchars($contact[$field]) ?>">
                 <label><?= $label ?></label>
                 <div class="field-value">
                     <?= $value ?>
@@ -100,9 +91,9 @@ require_once __DIR__ . '/add-deal-form.php';
         </div>
 
         <!-- Delete Button -->
-        <form id="deleteCompanyForm" action="/../../includes/companies/delete-company-inc.php" method="POST" style="margin-top: 20px; text-align: center;">
-            <input type="hidden" name="company_id" value="<?= $company['company_id'] ?>">
-            <button type="button" class="delete-company-btn" id="triggerDeleteModal">Delete Company</button>
+        <form id="deleteCompanyForm" action="/../../includes/contacts/delete-contact-inc.php" method="POST" style="margin-top: 20px; text-align: center;">
+            <input type="hidden" name="contact_id" value="<?= $contact['contact_id'] ?>">
+            <button type="button" class="delete-company-btn" id="triggerDeleteModal">Delete contact</button>
         </form>
         </section>
     </aside>
@@ -114,32 +105,23 @@ require_once __DIR__ . '/add-deal-form.php';
         </div>
 
         <div class="summary-grid">
-            <div><strong>Create Date:</strong><br><hr><?= date('d M Y h:i A', strtotime($company['created_at'])) ?></div>
+            <div><strong>Create Date:</strong><br><hr><?= date('d M Y h:i A', strtotime($contact['created_at'])) ?></div>
             <div><strong>Lifecycle Stage:</strong><br><hr>Lead</div>
             <div><strong>Last Activity Date:</strong><br><hr>----</div>
         </div>
         <div class="linked-section">
-            <div class="section-header">
-                <h3>Contacts</h3>
-                <button class="add-btn" data-target="contactSidebar">+ Add</button>
-            </div>
+            <h3>Contacts</h3>
             <p>No associated contacts yet.</p>
         </div>
 
         <div class="linked-section">
-            <div class="section-header">
-                <h3>Companies</h3>
-                <button class="add-btn" data-target="companySidebar">+ Add</button>
-            </div>
-            <p>No associated company yet.</p>
+            <h3>Companies</h3>
+            <p>No associated deals yet.</p>
         </div>
-
+        
         <div class="linked-section">
-            <div class="section-header">
-                <h3>Deals</h3>
-                <button class="add-btn" data-target="dealSidebar">+ Add</button>
-            </div>
-            <p>No associated deal yet.</p>
+            <h3>Deals</h3>
+            <p>No associated deals yet.</p>
         </div>
         
     </main>
@@ -152,4 +134,7 @@ require_once __DIR__ . '/add-deal-form.php';
 
 </body>
 </html>
+
+
+
 

@@ -20,7 +20,7 @@ class RegisterModel extends Dbh {
     }
 
     public function checkUsername($username) {
-        $query = "SELECT user_id FROM users WHERE username = :username ";
+        $query = "SELECT user_id FROM users WHERE  username = :username ";
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam(':username', $username);
         $stmt->execute();
@@ -28,7 +28,7 @@ class RegisterModel extends Dbh {
     }
 
     public function checkEmail($email) {
-        $query = "SELECT user_id FROM users WHERE email = :email";
+        $query = "SELECT user_id FROM users WHERE  email = :email";
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam(':email', $email);
         $stmt->execute();

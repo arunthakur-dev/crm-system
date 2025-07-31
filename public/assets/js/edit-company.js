@@ -96,3 +96,6 @@ window.addEventListener('click', function (e) {
         deleteModal.style.display = 'none';
     }
 });
+
+
+// JavaScript for Sidebar Toggle

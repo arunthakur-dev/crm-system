@@ -19,7 +19,7 @@ unset($_SESSION['login_data']);
 <body>
     <div class="auth-container">
         <h2>Login to CRM</h2>
-        <form action="../../includes/login-inc.php" method="post">
+        <form action="../../includes/auth/login-inc.php" method="post">
             <div class="form-group">
                 <label for="usernameOrEmail"><strong>Username or Email</strong></label>
                 <input type="text" name="usernameOrEmail" id="usernameOrEmail"

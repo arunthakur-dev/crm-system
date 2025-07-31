@@ -3,7 +3,7 @@
         <h2>Create New Company</h2>
         <button class="close-sidebar-btn" data-target="companySidebar">✖</button>
     </div>
-    <form action="/../../includes/create-company-inc.php" method="POST" class="sidebar-form">
+    <form action="/../../includes/companies/create-company-inc.php" method="POST" class="sidebar-form">
         
         <label for="company_domain">Company Domain</label>
         <input type="text" id="company_domain" name="company_domain" placeholder="e.g. example.com"  >

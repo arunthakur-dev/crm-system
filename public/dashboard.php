@@ -13,7 +13,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $username = htmlspecialchars($_SESSION['username']);
-$userId = $_SESSION['user_id'];
+$user_id = $_SESSION['user_id'];
 
 require_once __DIR__ . '/../models/companies-model.php';
 require_once __DIR__ . '/../models/contacts-model.php';
@@ -22,9 +22,9 @@ $companyModel = new CompaniesModel();
 // $contactModel = new ContactModel();
 // $dealModel    = new DealModel();
 
-$recentCompanies = $companyModel->fetchRecentSortedCompanies($userId, 5);
-// $recentContacts  = $contactModel->getRecentContacts($userId, 5);
-// $recentDeals     = $dealModel->getRecentDeals($userId, 5);
+$recentCompanies = $companyModel->fetchRecentSortedCompanies($user_id, 5);
+// $recentContacts  = $contactModel->getRecentContacts($user_id, 5);
+// $recentDeals     = $dealModel->getRecentDeals($user_id, 5);
 ?>
 
 <!DOCTYPE html>
@@ -55,16 +55,7 @@ $recentCompanies = $companyModel->fetchRecentSortedCompanies($userId, 5);
 
     </header>
 
-    <main class="main-content" id="main-content">
-        <!-- Centered Welcome Box -->
-        <section class="welcome-box">
-            <h2>Welcome, <?= $username ?>!</h2>
-            <p>This is your personalized CRM dashboard. From here, you can manage companies, contacts, and deals.</p>
-            <button class="create-btn open-sidebar-btn" data-target="companySidebar">+ Create Company</button>
-        </section>
-        <!-- Company Sidebar -->
-        <?php include __DIR__ . '/../views/companies/_create-company-form.php'; ?>
-        
+    <main class="main-content" id="main-content"><br><br>        
         <!-- Grid Layout -->
         <div class="dashboard-grid">
             <section class="dashboard-box">

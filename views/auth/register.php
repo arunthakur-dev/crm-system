@@ -20,7 +20,7 @@ unset($_SESSION['form_data']);
 <body>
     <div class="auth-container">
         <h2>Register for CRM</h2>
-        <form action="../../includes/register-inc.php" method="post">
+        <form action="../../includes/auth/register-inc.php" method="post">
             <div class="form-group">
                 <label for="username"><strong>Username</strong></label>
                 <input type="text" name="username" id="username" value="<?php echo htmlspecialchars($formData['username'] ?? ''); ?>" >

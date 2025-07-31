@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../../config/session-config.php';
-require_once __DIR__ . '/../../includes/companies-inc.php';
+require_once __DIR__ . '/../../includes/contacts/contacts-inc.php';
 ?>
 
 <!DOCTYPE html>
@@ -32,7 +32,7 @@ require_once __DIR__ . '/../../includes/companies-inc.php';
     </header>
     <?php if (isset($_GET['deleted'])): ?>
         <div class="alert success">
-            Company deleted successfully.
+            Contact deleted successfully.
             <button class="close-btn" onclick="this.parentElement.style.display='none';">×</button>
         </div>
     <?php endif; ?>
@@ -45,7 +45,7 @@ require_once __DIR__ . '/../../includes/companies-inc.php';
                         type="text" 
                         name="search" 
                         value="<?= htmlspecialchars($_GET['search'] ?? '') ?>" 
-                        placeholder="Search by name, industry, domain, owner, location..." 
+                        placeholder="Search by email, name, phone no..." 
                         class="search-input"
                     >
                     <input type="hidden" name="filter" value="<?= htmlspecialchars($filter) ?>">
@@ -54,18 +54,20 @@ require_once __DIR__ . '/../../includes/companies-inc.php';
                     <button type="submit" class="btn ">Search</button>
                 </form>
 
-                <button class="btn open-sidebar-btn" data-target="companySidebar">+ Create Contact</button>
+                <button class="btn open-sidebar-btn" data-target="contactSidebar">+ Create Contact</button>
                 <?php include __DIR__ . '/_create-contact-form.php'; ?>
             </div>
         </header>
         <div class="company-tabs-wrapper">
         <div class="record-count">
-            <span class="badge"><strong>Showing: </strong><?= ucfirst($filter) ?> Companies (<?= count($companies) ?> records)</span>
+            <span class="badge"><strong>Showing: </strong><?= ucfirst($filter) ?> Contacts (<?= count($contacts) ?> records)</span>
         </div>
-        <div class="company-tabs">
-            <a href="?filter=all" class="tab-link <?= (!isset($_GET['filter']) || $_GET['filter'] === 'all') ? 'active' : '' ?>">All companies</a>
-            <a href="?filter=my" class="tab-link <?= (isset($_GET['filter']) && $_GET['filter'] === 'my') ? 'active' : '' ?>">My companies</a>
-            <a href="?filter=recent" class="tab-link <?= (isset($_GET['filter']) && $_GET['filter'] === 'recent') ? 'active' : '' ?>">Recently Added</a>
+        <div class="company-tabs-wrapper">
+            <div class="company-tabs">
+                <a href="?filter=all" class="tab-link <?= (!isset($_GET['filter']) || $_GET['filter'] === 'all') ? 'active' : '' ?>">All Conatcts</a>
+                <a href="?filter=my" class="tab-link <?= ($_GET['filter'] ?? '') === 'my' ? 'active' : '' ?>">My Contacts</a>
+                <a href="?filter=recent" class="tab-link <?= ($_GET['filter'] ?? '') === 'recent' ? 'active' : '' ?>">Recently Added</a>
+            </div>
         </div>
         </div><br>
 
@@ -73,71 +75,53 @@ require_once __DIR__ . '/../../includes/companies-inc.php';
             <table>
                 <thead>
                     <tr>
-                        <th>
-                            <a href="?filter=<?= $filter ?>&sort=name&order=<?= ($sort == 'name' && $order == 'asc') ? 'desc' : 'asc' ?>">
-                                Email <?= $sort === 'name' ? ($order === 'asc' ? '▲' : '▼') : '' ?>
-                            </a>
-                        </th>
-                        <th>
-                            <a href="?filter=<?= $filter ?>&sort=company_domain&order=<?= ($sort == 'company_domain' && $order == 'asc') ? 'desc' : 'asc' ?>">
-                                First Name <?= $sort === 'company_domain' ? ($order === 'asc' ? '▲' : '▼') : '' ?>
-                            </a>
-                        </th>
-                        <th>
-                            <a href="?filter=<?= $filter ?>&sort=owner&order=<?= ($sort == 'owner' && $order == 'asc') ? 'desc' : 'asc' ?>">
-                                Last Name <?= $sort === 'owner' ? ($order === 'asc' ? '▲' : '▼') : '' ?>
-                            </a>
-                        </th>
-                        <th>
-                            <a href="?filter=<?= $filter ?>&sort=industry&order=<?= ($sort == 'industry' && $order == 'asc') ? 'desc' : 'asc' ?>">
-                                Contact Owner <?= $sort === 'industry' ? ($order === 'asc' ? '▲' : '▼') : '' ?>
-                            </a>
-                        </th>
-                        <th>
-                            <a href="?filter=<?= $filter ?>&sort=country&order=<?= ($sort == 'country' && $order == 'asc') ? 'desc' : 'asc' ?>">
-                                Phone Number <?= $sort === 'country' ? ($order === 'asc' ? '▲' : '▼') : '' ?>
-                            </a>
-                        </th>
-                        <th>
-                            <a href="?filter=<?= $filter ?>&sort=state&order=<?= ($sort == 'state' && $order == 'asc') ? 'desc' : 'asc' ?>">
-                                Lifecycle Stage <?= $sort === 'state' ? ($order === 'asc' ? '▲' : '▼') : '' ?>
-                            </a>
-                        </th>
-                        <th>
-                            <a href="?filter=<?= $filter ?>&sort=postal_code&order=<?= ($sort == 'postal_code' && $order == 'asc') ? 'desc' : 'asc' ?>">
-                                Lead Status <?= $sort === 'postal_code' ? ($order === 'asc' ? '▲' : '▼') : '' ?>
-                            </a>
-                        </th>
-                        <th>
-                            <a href="?filter=<?= $filter ?>&sort=created_at&order=<?= ($sort == 'created_at' && $order == 'asc') ? 'desc' : 'asc' ?>">
-                                Created <?= $sort === 'created_at' ? ($order === 'asc' ? '▲' : '▼') : '' ?>
-                            </a>
-                        </th>
+                        <?php
+                        $fields = [
+                            'first_name.last_name'=> 'Name',
+                            'first_name' => 'First Name',
+                            'last_name' => 'Last Name',
+                            'email' => 'Email',
+                            'contact_owner' => 'Owner',
+                            'phone' => 'Phone',
+                            'lifecycle_stage' => 'Lifecycle Stage',
+                            'lead_status' => 'Lead Status',
+                            'created_at' => 'Created'
+                        ];
+
+                        foreach ($fields as $key => $label):
+                            $arrow = ($sort === $key) ? ($order === 'asc' ? '▲' : '▼') : '';
+                            $newOrder = ($sort === $key && $order === 'asc') ? 'desc' : 'asc';
+                        ?>
+                            <th>
+                                <a href="?filter=<?= $filter ?>&sort=<?= $key ?>&order=<?= $newOrder ?>">
+                                    <?= $label ?> <?= $arrow ?>
+                                </a>
+                            </th>
+                        <?php endforeach; ?>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (empty($companies)): ?>
-                        <tr><td colspan="10">No companies found.</td></tr>
+                    <?php if (empty($contacts)): ?>
+                        <tr><td colspan="9">No contacts found.</td></tr>
                     <?php else: ?>
-                        <?php foreach ($companies as $company): ?>
+                        <?php foreach ($contacts as $contact): ?>
                             <tr>
                                 <td>
-                                    <form method="POST" action="view-company.php" style="display:inline;">
-                                        <input type="hidden" name="company_id" value="<?= $company['company_id'] ?>">
+                                    <form method="POST" action="view-contact.php" style="display:inline;">
+                                        <input type="hidden" name="contact_id" value="<?= $contact['contact_id'] ?>">
                                         <button type="submit" class="link-button">
-                                            <strong><?= htmlspecialchars($company['name']) ?></strong>
+                                            <strong><?= htmlspecialchars($contact['first_name'] . ' ' . $contact['last_name']) ?></strong>
                                         </button>
                                     </form>
                                 </td>
-                                <td><?= htmlspecialchars($company['company_domain']) ?></td>
-                                <td><?= htmlspecialchars($company['owner']) ?></td>
-                                <td><?= htmlspecialchars($company['industry']) ?></td>
-                                <td><?= htmlspecialchars($company['country']) ?></td>
-                                <td><?= htmlspecialchars($company['state']) ?></td>
-                                <td><?= htmlspecialchars($company['postal_code']) ?></td>
-                                <td><?= htmlspecialchars($company['employees']) ?></td>
-                                <td><?= htmlspecialchars($company['notes']) ?></td>
-                                <td><?= date('d M Y', strtotime($company['created_at'])) ?></td>
+                                <td><?= htmlspecialchars($contact['email']) ?></td>
+                                <td><?= htmlspecialchars($contact['first_name']) ?></td>
+                                <td><?= htmlspecialchars($contact['last_name']) ?></td>
+                                <td><?= htmlspecialchars($contact['contact_owner']) ?></td>
+                                <td><?= htmlspecialchars($contact['phone']) ?></td>
+                                <td><?= htmlspecialchars($contact['lifecycle_stage']) ?></td>
+                                <td><?= htmlspecialchars($contact['lead_status']) ?></td>
+                                <td><?= date('d M Y, h:i A', strtotime($contact['created_at'])) ?></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
@@ -146,13 +130,18 @@ require_once __DIR__ . '/../../includes/companies-inc.php';
         </div>
     </main>
 <?php
-$_SESSION['company_id'] = $company['company_id'];  
+if (isset($contact)) {
+    // Store contact ID in session for later use
+    $_SESSION['contact_id'] = $contact['contact_id'];
+}  
 ?>
-    <!-- Footer -->
-    <footer class="footer">
-        <p>&copy; <?= date('Y') ?> CRM System. All rights reserved.</p>
-    </footer>
+<!-- Footer -->
+<footer class="footer">
+    <p>&copy; <?= date('Y') ?> CRM System. All rights reserved.</p>
+</footer>
 </div>
+
+<!-- Script to auto-hide success alert after 4 seconds -->
 <script>
     setTimeout(() => {
         const alert = document.querySelector('.alert.success');

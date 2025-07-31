@@ -9,7 +9,7 @@ class LoginModel extends Dbh {
     }
 
     public function getUserByUsernameOrEmail($usernameOrEmail) {
-        $query = "SELECT * FROM users WHERE username = :ue OR email = :ue";
+        $query = "SELECT * FROM users WHERE  username = :ue OR email = :ue";
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam(':ue', $usernameOrEmail);
         $stmt->execute();

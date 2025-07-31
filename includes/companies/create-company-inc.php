@@ -1,7 +1,7 @@
 <?php
-require_once '../models/companies-model.php';
-require_once '../controllers/companies-controller.php';
-require_once '../config/session-config.php'; // using session-based user_id
+require_once '/../../models/companies-model.php';
+require_once '/../../controllers/companies-controller.php';
+require_once '/../../config/session-config.php'; // using session-baseduser_id
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Collect and sanitize form data
@@ -24,6 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $companyController->createCompany();
 
     // Redirect after success (optional)
-    header('Location: /../views/companies/companies.php?status=success');
+    header('Location: /../../views/companies/companies.php?status=success');
     exit;
 }

@@ -4,7 +4,7 @@
 -- Table structure for table `users`
 --
 CREATE TABLE users (
-    user_id INT AUTO_INCREMENT PRIMARY KEY,
+   user_id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
     company_name VARCHAR(255),
@@ -16,8 +16,8 @@ CREATE TABLE users (
 -- Table structure for table `companies`
 --
 CREATE TABLE companies (
-    company_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+   company_id INT AUTO_INCREMENT PRIMARY KEY,
+   user_id INT NOT NULL,
     company_domain VARCHAR(255),
     name VARCHAR(255) NOT NULL,
     owner VARCHAR(255),
@@ -37,8 +37,8 @@ CREATE TABLE companies (
 --
 CREATE TABLE contacts (
     contact_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    company_id INT NOT NULL,
+   user_id INT NOT NULL,
+   company_id INT NOT NULL,
     full_name VARCHAR(255) NOT NULL,
     email VARCHAR(255),
     phone VARCHAR(50),
@@ -52,9 +52,9 @@ CREATE TABLE contacts (
 --
 CREATE TABLE deals (
     deal_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+   user_id INT NOT NULL,
     contact_id INT NOT NULL,
-    company_id INT NOT NULL,
+   company_id INT NOT NULL,
     title VARCHAR(255) NOT NULL,
     value DECIMAL(12, 2),
     stage ENUM('Lead', 'Negotiation', 'Won', 'Lost') NOT NULL,

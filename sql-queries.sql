@@ -2,7 +2,7 @@ CREATE DATABASE crm_system;
 USE crm_system;
 
 CREATE TABLE users (
-    user_id INT AUTO_INCREMENT PRIMARY KEY,
+   user_id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
     company_name VARCHAR(255) DEFAULT null,
@@ -18,15 +18,15 @@ VALUES('johndoe', 'john.doe@example.com',
 
 DESCRIBE users;
 SELECT * FROM users;
-DELETE from users where user_id=1;
+ 
 DROP TABLE users;
-UPDATE users SET user_id = 1 WHERE user_id=4;
+ 
 
 
 
 CREATE TABLE companies (
-    company_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+   company_id INT AUTO_INCREMENT PRIMARY KEY,
+   user_id INT NOT NULL,
     company_domain VARCHAR(255),
     name VARCHAR(255) NOT NULL,
     owner VARCHAR(255),
@@ -41,7 +41,7 @@ CREATE TABLE companies (
 );
 
 INSERT INTO companies (
-    user_id, company_domain, name, owner, industry,
+   user_id, company_domain, name, owner, industry,
     country, state, postal_code, employees, notes
 ) VALUES
 (1, 'innovatek.com', 'Innovatek Solutions', 'Nikita Sharma', 'Computer Software', 'India', 'Maharashtra', '400001', 250, 'Focused on AI & ML-based enterprise tools.'),
@@ -57,41 +57,55 @@ SELECT * FROM companies;
 ALTER TABLE companies DROP COLUMN logo;
 ALTER TABLE companies ADD COLUMN phone VARCHAR(20) AFTER company_domain;
 ALTER TABLE companies ADD COLUMN logo varchar(255) AFTER phone;
+UPDATE companies company_id = 1 WHERE user_id=1;
 
-UPDATE companies SET user_id = 1 WHERE company_id=3;
+UPDATE companies user_id = 1 WHERE company_id=3;
 DROP TABLE companies;
 
+-- contacts table --
 CREATE TABLE contacts (
     contact_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    company_id INT NOT NULL,
-    full_name VARCHAR(255) NOT NULL,
+   company_id INT NOT NULL,
+   user_id INT NOT NULL,
     email VARCHAR(255),
-    phone VARCHAR(50), -- linked company
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    contact_owner VARCHAR(100),
+    phone VARCHAR(20),
+    lifecycle_stage VARCHAR(100),
+    lead_status VARCHAR(100),
+    logo varchar(255),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES USERS(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (company_id) REFERENCES COMPANIES(company_id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (company_id) REFERENCES companies(company_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
-INSERT INTO contacts (user_id, company_id, full_name, email, phone) VALUES
--- John Doe's Contacts
-(1, 1, 'Alice Johnson', 'alice.j@innovate.com', '111-222-3333'),
-(1, 1, 'Bob Williams', 'bob.w@innovate.com', '111-222-4444'),
-(1, 2, 'Charlie Brown', 'charlie.b@globalexports.com', '555-666-7777'),
--- Jane Smith's Contacts
-(2, 3, 'Diana Prince', 'diana.p@creativesolutions.com', '888-999-0000'),
-(2, 4, 'Eve Adams', 'eve.a@healthfirst.com', '444-555-6666'),
-(2, 4, 'Frank Miller', 'frank.m@healthfirst.com', '444-555-7777');
+
+INSERT INTO contacts (
+   company_id,user_id, email, first_name, last_name, contact_owner,
+    phone, lifecycle_stage, lead_status, logo
+) VALUES
+(11, 1, 'jane.doe@example.com', 'Jane', 'Doe', 'Arun Thakur', '9876543210', 'Lead', 'New', 'jane_doe.jpg'),
+
+(11, 1, 'john.smith@example.com', 'John', 'Smith', 'Arun Thakur', '7890123456', 'Customer', 'Contacted', 'john_smith.png'),
+
+(11, 1, 'alex.jones@example.com', 'Alex', 'Jones', 'Arun Thakur', '9812345678', 'Opportunity', 'Qualified', 'alex_jones.png'),
+
+(11, 1, 'priya.rai@example.com', 'Priya', 'Rai', 'Arun Thakur', '9123456780', 'Lead', 'Open Deal', 'priya_rai.jpg');
+
 
 SELECT * FROM contacts;
-UPDATE contacts SET user_id = 1 WHERE contact_id=4;
+UPDATE contacts user_id = 1 WHERE  contact_id=4;
 DROP TABLE contacts;
+DROP TABLE IF EXISTS contacts;
+ALTER TABLE contacts DISCARD TABLESPACE;
+
 
 CREATE TABLE deals (
     deal_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+   user_id INT NOT NULL,
     contact_id INT NOT NULL,
-    company_id INT NOT NULL,
+   company_id INT NOT NULL,
     title VARCHAR(255) NOT NULL,
     value DECIMAL(12, 2),
     stage ENUM('Lead', 'Negotiation', 'Won', 'Lost') NOT NULL,
@@ -101,7 +115,7 @@ CREATE TABLE deals (
     FOREIGN KEY (company_id) REFERENCES COMPANIES(company_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-INSERT INTO deals (user_id, contact_id, company_id, title, value, stage) VALUES
+INSERT INTO deals (user_id, contact_id,company_id, title, value, stage) VALUES
 -- John Doe's Deals
 (1, 1, 1, 'New Website Development', 15000.00, 'Negotiation'),
 (1, 3, 2, 'International Shipping Contract', 75000.00, 'Won'),
@@ -109,7 +123,7 @@ INSERT INTO deals (user_id, contact_id, company_id, title, value, stage) VALUES
 (2, 4, 3, 'Q4 Marketing Campaign', 25000.00, 'Lead'),
 (2, 5, 4, 'Medical Equipment Supply', 120000.00, 'Lost');
 
-UPDATE deals SET user_id = 1 WHERE deal_id=3;
+UPDATE deals user_id = 1 WHERE  deal_id=3;
 SELECT * FROM deals;
 DROP TABLE deals;
 

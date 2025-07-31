@@ -1,9 +1,9 @@
 <?php
-require_once __DIR__ . '/../config/session-config.php';
-require_once __DIR__ . '/../controllers/companies-controller.php';
+require_once __DIR__ . '/../../config/session-config.php';
+require_once __DIR__ . '/../../controllers/companies-controller.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: ../auth/login.php');
+    header('Location: /../../veiws/auth/login.php');
     exit();
 }
 
@@ -17,12 +17,12 @@ if (!isset($_SESSION['company_id']) || !is_numeric($_SESSION['company_id'])) {
     die("No company selected or invalid session.");
 }
 
-$companyId = $_SESSION['company_id'];
-$userId = $_SESSION['user_id'];
+$company_id = $_SESSION['company_id'];
+$user_id = $_SESSION['user_id'];
 
 // Fetch company details
 $companyController = new CompaniesController();
-$company = $companyController->getCompanyDetails($companyId, $userId);
+$company = $companyController->getCompanyDetails($company_id, $user_id);
 
 if (!$company) {
     die("Company not found or access denied.");

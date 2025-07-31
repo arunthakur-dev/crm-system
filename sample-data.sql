@@ -21,7 +21,7 @@ INSERT INTO companies (user_id, name, industry, location, notes) VALUES
 --
 -- Sample data for table `contacts`
 --
-INSERT INTO contacts (user_id, company_id, full_name, email, phone) VALUES
+INSERT INTO contacts (user_id,company_id, full_name, email, phone) VALUES
 -- John Doe's Contacts
 (1, 1, 'Alice Johnson', 'alice.j@innovate.com', '111-222-3333'),
 (1, 1, 'Bob Williams', 'bob.w@innovate.com', '111-222-4444'),
@@ -34,7 +34,7 @@ INSERT INTO contacts (user_id, company_id, full_name, email, phone) VALUES
 --
 -- Sample data for table `deals`
 --
-INSERT INTO deals (user_id, contact_id, company_id, title, value, stage) VALUES
+INSERT INTO deals (user_id, contact_id,company_id, title, value, stage) VALUES
 -- John Doe's Deals
 (1, 1, 1, 'New Website Development', 15000.00, 'Negotiation'),
 (1, 3, 2, 'International Shipping Contract', 75000.00, 'Won'),
@@ -43,5 +43,5 @@ INSERT INTO deals (user_id, contact_id, company_id, title, value, stage) VALUES
 (2, 5, 4, 'Medical Equipment Supply', 120000.00, 'Lost');
 
 -- Note: The IDs for companies, contacts, and deals will be auto-incremented.
--- The INSERT statements above assume a fresh database where user_id 1 is 'johndoe'
--- and the company_ids and contact_ids are created in the order they are inserted.
+-- The INSERT statements above assume a fresh database WHERE user_id 1 is 'johndoe'
+-- and thecompany_ids and contact_ids are created in the order they are inserted.

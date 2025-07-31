@@ -2,7 +2,7 @@
 <div id="editCompanyModal" class="modal">
     <div class="modal-content">   
         <h2>Edit Company Details</h2>
-        <form action="/../../includes/update-company-inc.php" method="POST" enctype="multipart/form-data">
+        <form action="/../../includes/companies/update-company-inc.php" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="company_id" value="<?= $company['company_id'] ?>">
 
             <label for="company_name">Company Name</label>
@@ -17,11 +17,10 @@
             <label for="company_logo">Upload New Logo</label>
             <input type="file" id="company_logo" name="company_logo">
 
+            <button type="submit" class="submit-btn">Save</button>
             <?php if (!empty($company['logo'])): ?>
                 <button type="submit" name="remove_logo" value="1" class="remove-logo-btn">Remove Logo</button>
             <?php endif; ?>
-
-            <button type="submit" class="submit-btn">Save</button>
             <button type="button" class="cancel-btn close-modal">Cancel</button>
         </form>
     </div>
@@ -31,7 +30,7 @@
 <div id="editAboutFieldModal" class="modal">
     <div class="modal-content">
         <h2>Edit Field</h2>
-        <form id="aboutFieldForm" action="/../../includes/update-company-field-inc.php" method="POST">
+        <form id="aboutFieldForm" action="/../../includes/companies/update-company-field-inc.php" method="POST">
             <input type="hidden" name="company_id" value="<?= $company['company_id'] ?>">
             <input type="hidden" name="field_name" id="field_name">
             <label id="field_label" for="field_value">Field</label>

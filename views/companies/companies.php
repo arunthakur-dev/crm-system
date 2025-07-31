@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../../config/session-config.php';
-require_once __DIR__ . '/../../includes/companies-inc.php';
+require_once __DIR__ . '/../../includes/companies/companies-inc.php';
 ?>
 
 <!DOCTYPE html>
@@ -143,7 +143,7 @@ require_once __DIR__ . '/../../includes/companies-inc.php';
                                 <td><?= htmlspecialchars($company['postal_code']) ?></td>
                                 <td><?= htmlspecialchars($company['employees']) ?></td>
                                 <td><?= htmlspecialchars($company['notes']) ?></td>
-                                <td><?= date('d M Y', strtotime($company['created_at'])) ?></td>
+                                <td><?= date('d M Y, h:i A', strtotime($company['created_at'])) ?></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
@@ -152,7 +152,10 @@ require_once __DIR__ . '/../../includes/companies-inc.php';
         </div>
     </main>
 <?php
-$_SESSION['company_id'] = $company['company_id'];  
+if (isset($company)) {
+    // Store company ID in session for later use
+    $_SESSION['company_id'] = $company['company_id'];
+}  
 ?>
     <!-- Footer -->
     <footer class="footer">

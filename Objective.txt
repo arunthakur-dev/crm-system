@@ -1,5 +1,5 @@
 Objective:
-=> Build a multi-object CRM system where each user can manage their own:
+=> Build a multi-object CRM system WHERE  each user can manage their own:
 		Contacts
 
 		Companies
@@ -54,7 +54,7 @@ This document outlines the database schema for the CRM system.
 ```mermaid
 erDiagram
     USERS {
-        int user_id PK
+        intuser_id PK
         varchar username
         varchar email
         varchar password_hash
@@ -62,8 +62,8 @@ erDiagram
     }
 
     COMPANIES {
-        int company_id PK
-        int user_id FK "Owner of the company"
+        intcompany_id PK
+        intuser_id FK "Owner of the company"
         varchar name
         varchar industry
         varchar location
@@ -73,8 +73,8 @@ erDiagram
 
     CONTACTS {
         int contact_id PK
-        int user_id FK "Owner of the contact"
-        int company_id FK "Company the contact belongs to"
+        intuser_id FK "Owner of the contact"
+        intcompany_id FK "Company the contact belongs to"
         varchar full_name
         varchar email
         varchar phone
@@ -83,9 +83,9 @@ erDiagram
 
     DEALS {
         int deal_id PK
-        int user_id FK "Owner of the deal"
+        intuser_id FK "Owner of the deal"
         int contact_id FK "Contact associated with the deal"
-        int company_id FK "Company associated with the deal"
+        intcompany_id FK "Company associated with the deal"
         varchar title
         decimal value
         enum stage "e.g., Lead, Negotiation, Won, Lost"

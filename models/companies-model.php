@@ -6,7 +6,7 @@ class CompaniesModel extends Dbh {
                                      $industry, $country, $state,
                                      $postal_code, $employees, $notes) {
         $sql = "INSERT INTO companies (
-                    user_id, company_domain, name, owner, industry,
+                   user_id, company_domain, name, owner, industry,
                     country, state, postal_code, employees, notes
                 ) VALUES (
                     ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
@@ -32,11 +32,11 @@ class CompaniesModel extends Dbh {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function fetchCompanyById($companyId, $userId) {
+    public function fetchCompanyById($company_id, $user_id) {
         $stmt = $this->connect()->prepare(
-            "SELECT * FROM companies WHERE company_id = ? AND user_id = ?"
+            "SELECT * FROM companies WHERE  company_id = ? AND user_id = ?"
         );
-        $stmt->execute([$companyId, $userId]);
+        $stmt->execute([$company_id, $user_id]);
 
         if ($stmt->rowCount() === 0) {
             return null; // No such company or not owned by user
@@ -45,7 +45,7 @@ class CompaniesModel extends Dbh {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function fetchSortedCompanies($userId, $sort, $order) {
+    public function fetchSortedCompanies($user_id, $sort, $order) {
         $allowedFields = ['name', 'company_domain', 'owner', 'industry', 'country', 'state', 'postal_code', 'employees', 'created_at'];
         $allowedOrder = ['asc', 'desc'];
 
@@ -53,37 +53,24 @@ class CompaniesModel extends Dbh {
         if (!in_array(strtolower($order), $allowedOrder)) $order = 'desc';
 
         $sql = "SELECT * FROM companies 
-                WHERE user_id = :user_id 
+                WHERE  user_id = :user_id 
                 ORDER BY $sort $order";
 
         $stmt = $this->connect()->prepare($sql);
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getMyCompanies($userId, $sort = 'created_at', $order = 'desc') {
+    public function fetchSortedMyCompanies($user_id, $sort = 'created_at', $order = 'desc') {
         $stmt = $this->connect()->prepare("
             SELECT * FROM companies 
-            WHERE user_id = :user_id
+            WHERE  user_id = :user_id
             ORDER BY $sort $order
         ");
-        $stmt->bindParam(':user_id', $userId);
+        $stmt->bindParam(':user_id', $user_id);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    // In CompaniesModel
-    public function fetchMyCompanies($userId) {
-        $sql = "SELECT * FROM companies 
-                WHERE user_id = :user_id 
-                ORDER BY created_at DESC";
-
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
-        $stmt->execute();
-
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -93,21 +80,21 @@ class CompaniesModel extends Dbh {
         $sql = "UPDATE companies SET 
                     company_domain = ?, name = ?, owner = ?, industry = ?, country = ?,
                     state = ?, postal_code = ?, employees = ?, notes = ?
-                WHERE company_id = ? AND user_id = ?";
+                WHERE company_id = ? ANDuser_id = ?";
         $stmt = $this->connect()->prepare($sql);
         $stmt->execute([
             $company_domain, $name, $owner, $industry, $country,
             $state, $postal_code, $employees, $notes, $company_id, $user_id
         ]);
-    }
+    } 
 
-    public function searchCompanies($userId, $searchTerm, $filter = 'all', $sort = 'created_at', $order = 'desc') {
+    public function searchCompanies($user_id, $searchTerm, $filter = 'all', $sort = 'created_at', $order = 'desc') {
         $searchTerm = '%' . $searchTerm . '%';
 
         $sql = "
             SELECT companies.* 
             FROM companies
-            WHERE (
+            WHERE  (
                 companies.name LIKE ?
                 OR companies.industry LIKE ?
                 OR companies.company_domain LIKE ?
@@ -123,7 +110,7 @@ class CompaniesModel extends Dbh {
         // Restrict to logged-in user's data if 'my' filter
         if ($filter === 'my') {
             $sql .= " AND companies.user_id = ?";
-            $params[] = $userId;
+            $params[] = $user_id;
         }
 
         $sql .= " ORDER BY `$sort` $order LIMIT 100";
@@ -135,14 +122,14 @@ class CompaniesModel extends Dbh {
 
     // Delete company
     public function deleteCompany($company_id, $user_id) {
-        $sql = "DELETE FROM companies WHERE company_id = ? AND user_id = ?";
+        $sql = "DELETE FROM companies WHERE company_id = ? ANDuser_id = ?";
         $stmt = $this->connect()->prepare($sql);
         $stmt->execute([$company_id, $user_id]);
     }
 
     // models/CompanyModel.php
 
-    public function fetchRecentSortedCompanies($userId, $limit = 10, $sort = 'created_at', $order = 'desc') {
+    public function fetchRecentSortedCompanies($user_id, $limit = 10, $sort = 'created_at', $order = 'desc') {
     $validSortFields = ['name', 'company_domain', 'owner', 'industry', 'country', 'state', 'postal_code', 'employees', 'created_at'];
     $validOrders = ['asc', 'desc'];
 
@@ -154,8 +141,8 @@ class CompaniesModel extends Dbh {
         $order = 'desc';
     }
 
-    $stmt = $this->connect()->prepare("SELECT * FROM companies WHERE user_id = :user_id ORDER BY $sort $order LIMIT :limit");
-    $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+    $stmt = $this->connect()->prepare("SELECT * FROM companies WHERE  user_id = :user_id ORDER BY $sort $order LIMIT :limit");
+    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
     $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
     $stmt->execute();
 

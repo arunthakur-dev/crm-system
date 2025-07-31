@@ -29,26 +29,29 @@ class CompaniesController extends CompaniesModel {
         );
     }
 
-    public function getCompanyDetails($companyId, $userId) {
-        return $this->fetchCompanyById($companyId, $userId);
+    public function getCompanyDetails($company_id, $user_id) {
+        return $this->fetchCompanyById($company_id, $user_id);
     }
 
     public function getCompanyById($company_id, $user_id) {
         return $this->fetchCompanyById($company_id, $user_id);
     }
 
-    public function getRecentSortedCompanies($userId, $limit = 10, $sort = 'created_at', $order = 'desc') {
-        return $this->fetchRecentSortedCompanies($userId, $limit, $sort, $order);
+    public function getRecentSortedCompanies($user_id, $limit = 10, $sort = 'created_at', $order = 'desc') {
+        return $this->fetchRecentSortedCompanies($user_id, $limit, $sort, $order);
     }
 
-    public function getSortedCompanies($userId, $sort, $order) {
-        return $this->fetchSortedCompanies($userId, $sort, $order);
+    public function getSortedCompanies($user_id, $sort, $order) {
+        return $this->fetchSortedCompanies($user_id, $sort, $order);
     }
 
-    public function getSortedMyCompanies($userId, $sort, $order) {
-        return $this->getMyCompanies($userId, $sort, $order);
+    public function getSortedMyCompanies($user_id, $sort, $order) {
+        return $this->fetchSortedMyCompanies($user_id,  $sort, $order);
     }
 
+    public function getSearchedCompanies($user_id, $searchTerm, $filter = 'all', $sort = 'created_at', $order = 'desc') {
+        return $this->searchCompanies($user_id, $searchTerm, $filter, $sort, $order);
+    }
 
     // Update company 
     public function updateCompany($company_id, $user_id, $company_domain, $name, $owner,
