@@ -14,7 +14,7 @@
         <label for="owner">Company Owner</label>
         <input type="text" id="owner" name="owner" value="<?php echo htmlspecialchars($_SESSION['username']); ?>" placeholder="Owner's Name">
 
-        <label for="industry">Industry</label>
+        <label for="industry">Industry</label>   
         <select id="industry" name="industry"  >
             <option value="">Select Industry</option>
             <option value="Computer Software">Computer Software</option>
