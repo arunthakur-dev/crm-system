@@ -1,25 +1,207 @@
 <?php
 require_once __DIR__ . '/../config/dbh.php';
 
-class DealModel extends Dbh {
-    public function getUserDeals($user_id) {
-        $pdo = $this->connect();
-        $stmt = $pdo->prepare("SELECT deals.*, contacts.full_name AS contact_name, companies.name AS company_name 
-                               FROM deals 
-                               JOIN contacts ON deals.contact_id = contacts.contact_id 
-                               JOIN companies ON deals.company_id = companies.company_id 
-                               WHERE  deals.user_id = :uid 
-                               ORDER BY deals.created_at DESC");
-        $stmt->execute(['uid' => $user_id]);
+class DealsModel extends Dbh {
+
+    protected function insertDeal($user_id, $title, $deal_stage, $amount, $close_date, $deal_owner, $deal_type, $priority) {
+        
+        $sql = "INSERT INTO deals (
+                    user_id, title, deal_stage, amount, close_date, 
+                    deal_owner, deal_type, priority
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        
+        $stmt = $this->connect()->prepare($sql);
+        $success = $stmt->execute([
+            $user_id, $title, $deal_stage, $amount, $close_date,
+            $deal_owner, $deal_type, $priority
+        ]);
+
+        if (!$success) {
+            throw new Exception("Failed to insert deal.");
+        }
+
+        $deal_id = $this->connect()->lastInsertId();
+        if (!$deal_id) {
+            throw new Exception("Failed to retrieve last insert ID for deal.");
+        }
+
+        return $deal_id;
+    }
+
+    public function linkDealToContact($deal_id, $contact_id) {
+        $sql = "INSERT INTO contact_deals (deal_id, contact_id) VALUES (?, ?)";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([$deal_id, $contact_id]);
+    }
+
+    public function linkDealToCompany($deal_id, $company_id) {
+        $sql = "INSERT INTO company_deals (deal_id, company_id) VALUES (?, ?)";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([$deal_id, $company_id]);
+    }
+
+    public function createDealAndLink(
+        $user_id, $title, $deal_stage, $amount, $close_date,
+        $contact_owner, $deal_type, $priority,
+        $contact_id = null, $company_id = null
+        ) {
+        $this->connect()->beginTransaction();
+
+        try {
+            $deal_id = $this->insertDeal(
+                $user_id, $title, $deal_stage, $amount, $close_date,
+                $contact_owner, $deal_type, $priority
+            );
+
+            if ($contact_id) {
+                $this->linkDealToContact($deal_id, $contact_id);
+            }
+
+            if ($company_id) {
+                $this->linkDealToCompany($deal_id, $company_id);
+            }
+
+            $this->connect()->commit();
+            return $deal_id;
+
+        } catch (Exception $e) {
+            $this->connect()->rollBack();
+            throw $e;
+        }
+    }
+
+
+
+    public function fetchDealsByUser($user_id) {
+        $sql = "SELECT * FROM deals WHERE user_id = ? ORDER BY created_at DESC";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([$user_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getRecentDeals($user_id, $limit = 5) {
-        $pdo = $this->connect();
-        $stmt = $pdo->prepare("SELECT * FROM deals WHERE user_id = :uid ORDER BY created_at DESC LIMIT :lim");
-        $stmt->bindValue(':uid', $user_id, PDO::PARAM_INT);
-        $stmt->bindValue(':lim', $limit, PDO::PARAM_INT);
+    public function fetchDealDetails($deal_id, $user_id) {
+        $sql = "SELECT * FROM deals WHERE deal_id = ? AND user_id = ?";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([$deal_id, $user_id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function fetchContactsForDeal($deal_id , $user_id) {
+        $sql = "SELECT c.* FROM contacts c
+                INNER JOIN contact_deals dc ON c.contact_id = dc.contact_id
+                WHERE dc.deal_id = ?
+                AND c.user_id = ?";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([$deal_id, $user_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function fetchCompaniesForDeal($deal_id, $user_id) {
+        $sql = "SELECT comp.* FROM companies comp
+                INNER JOIN company_deals dc ON comp.company_id = dc.company_id
+                WHERE dc.deal_id = ?
+                AND comp.user_id = ?";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([$deal_id, $user_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function fetchRecentSortedDeals($user_id, $limit = 10, $sort = 'created_at', $order = 'desc') {
+        $validSortFields = ['deal_name', 'deal_stage', 'amount', 'deal_owner', 'pipeline', 'close_date', 'created_at'];
+        $validOrders = ['asc', 'desc'];
+
+        if (!in_array($sort, $validSortFields)) {
+            $sort = 'created_at';
+        }
+        if (!in_array(strtolower($order), $validOrders)) {
+            $order = 'desc';
+        }
+
+        $stmt = $this->connect()->prepare("SELECT * FROM deals WHERE user_id = :user_id ORDER BY $sort $order LIMIT :limit");
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function fetchSortedDeals($user_id, $sort, $order) {
+        $allowedFields = ['deal_name', 'deal_stage', 'amount', 'deal_owner', 'pipeline', 'close_date', 'created_at'];
+        $allowedOrder = ['asc', 'desc'];
+
+        if (!in_array($sort, $allowedFields)) $sort = 'created_at';
+        if (!in_array(strtolower($order), $allowedOrder)) $order = 'desc';
+
+        $stmt = $this->connect()->prepare("SELECT * FROM deals WHERE user_id = :user_id ORDER BY $sort $order");
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function fetchSortedMyDeals($user_id, $sort = 'created_at', $order = 'desc') {
+        $stmt = $this->connect()->prepare("
+            SELECT * FROM deals
+            WHERE user_id = :user_id
+            ORDER BY $sort $order
+        ");
+        $stmt->bindParam(':user_id', $user_id);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function searchDeals($user_id, $searchTerm, $filter = 'all', $sort = 'created_at', $order = 'desc') {
+        $searchTerm = '%' . $searchTerm . '%';
+
+        $allowedSortFields = ['deal_name', 'deal_stage', 'amount', 'deal_owner', 'pipeline', 'close_date', 'created_at'];
+        if (!in_array($sort, $allowedSortFields)) $sort = 'created_at';
+        $order = strtolower($order) === 'asc' ? 'ASC' : 'DESC';
+
+        $sql = "
+            SELECT * FROM deals
+            WHERE (
+                deal_name LIKE ?
+                OR deal_stage LIKE ?
+                OR deal_owner LIKE ?
+                OR pipeline LIKE ?
+            )
+        ";
+
+        $params = array_fill(0, 4, $searchTerm);
+
+        if ($filter === 'my') {
+            $sql .= " AND user_id = ?";
+            $params[] = $user_id;
+        }
+
+        $sql .= " ORDER BY `$sort` $order LIMIT 100";
+
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function fetchDealById($deal_id, $user_id) {
+        $stmt = $this->connect()->prepare(
+            "SELECT * FROM deals WHERE deal_id = ? AND user_id = ?"
+        );
+        $stmt->execute([$deal_id, $user_id]);
+
+        if ($stmt->rowCount() === 0) {
+            return null; // No such contact or not owned by user
+        }
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+
+
+
+    public function removeDeal($deal_id, $user_id) {
+        $stmt = $this->connect()->prepare("DELETE FROM deals WHERE deal_id = :deal_id AND user_id = :user_id");
+        $stmt->bindParam(':deal_id', $deal_id, PDO::PARAM_INT);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
 }

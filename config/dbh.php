@@ -1,15 +1,21 @@
 <?php
 
 class Dbh {
-     public function connect() {
-        try {
-            $username = "root";
-            $password = "";
-            $pdo = new PDO("mysql:host=localhost;dbname=crm_system", $username, $password);
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            return $pdo;
-        } catch (PDOException $e) {
-            die("Database connection failed: " . $e->getMessage());
+    private $pdo;
+
+    public function connect() {
+        if ($this->pdo === null) {
+            try {
+                $username = "root";
+                $password = "";
+                $this->pdo = new PDO("mysql:host=localhost;dbname=crm_system", $username, $password);
+                $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            } catch (PDOException $e) {
+                die("Database connection failed: " . $e->getMessage());
+            }
         }
+
+        return $this->pdo;
     }
 }
+

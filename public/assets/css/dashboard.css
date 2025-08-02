@@ -15,59 +15,62 @@ body {
     display: flex;
     flex-direction: column;
 }
-
 /* Navbar */
 .navbar {
-    background-color: #139cbe;
-    color: white;
-    padding: 15px 20px;
-    display: flex;
-    height: 40px;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
+  background-color: #139cbe;
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  height: 60px;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 .navbar h2 {
-    margin: 0;
-    font-size: 22px;
+  margin: 0;
+  font-size: 22px;
 }
 
 .navbar nav a {
-    color: white;
-    margin-left: 15px;
-    text-decoration: none;
-    font-weight: bold;
+  color: white;
+  margin-left: 15px;
+  text-decoration: none;
+  font-weight: bold;
 }
 
 .navbar nav a:hover {
-    text-decoration: underline;
-    color: #090909;
+  text-decoration: underline;
+  color: #090909;
 }
 
 .navbar nav a.active {
-    background-color: white;
-    color: #139cbe;
-    padding: 8px 12px;
-    border-radius: 5px;
-    font-weight: bold;
-    box-shadow: 0 0 4px rgba(0,0,0,0.1);
-    transition: background-color 0.3s, color 0.3s;
+  background-color: white;
+  color: #139cbe;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-weight: bold;
+  box-shadow: 0 0 4px rgba(0,0,0,0.1);
+  transition: background-color 0.3s, color 0.3s;
 }
+
 .navbar nav a:hover.active {
-    background-color: #5fdaf8;
-    color: #090909;
+  background-color: #5fdaf8;
+  color: #090909;
 }
 
 /* Logout Box */
 .logout-box {
     color: #ff4d4d;
     text-decoration: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    background-color: #e2dede;
     font-weight: bold;
     transition: background-color 0.3s, color 0.3s;
 }
 .logout-box:hover {
-    background-color: #fff;
+    background-color: #ffffff;
     color: #ff4d4d !important;
     border-radius: 5px;
     padding: 8px 12px;

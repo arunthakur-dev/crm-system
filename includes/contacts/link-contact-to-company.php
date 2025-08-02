@@ -1,47 +1,50 @@
 <?php
-require_once __DIR__ . '/../../config/db-config.php'; // DB connection
-require_once __DIR__ . '/../../config/session-config.php'; // Session
-require_once __DIR__ . '/../../helpers/redirect.php'; // Optional helper
+require_once __DIR__ . '/../../config/session-config.php';
+require_once __DIR__ . '/../../config/dbh.php';
+require_once __DIR__ . '/../../controllers/contacts-controller.php';
+require_once __DIR__ . '/../../models/contacts-model.php';
 
-if (!isset($_SESSION['user_id'])) {
-    die("Unauthorized access");
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header("Location: /error.php");
+    exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $userId = $_SESSION['user_id'];
-    $companyId = $_POST['company_id'] ?? null;
-    $contactId = $_POST['existing_contact_id'] ?? null;
+$company_id = $_POST['company_id'] ?? null;
+$user_id = $_SESSION['user_id'] ?? null; 
 
-    if (!$companyId || !$contactId || !is_numeric($companyId) || !is_numeric($contactId)) {
-        die("Invalid form data.");
+try {
+    if (!$company_id || !$user_id) {
+        throw new Exception("Missing company or user ID.");
     }
 
-    try {
-        $pdo = new PDO($dsn, $dbUser, $dbPass, [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ]);
+    $contactController = new ContactsController();
 
-        // Optional: check if already linked
-        $check = $pdo->prepare("SELECT * FROM company_contacts WHERE company_id = ? AND contact_id = ?");
-        $check->execute([$companyId, $contactId]);
+    if (isset($_POST['existing_contact_id'])) {
+        $contact_id = $_POST['existing_contact_id'];
+        $contactController->linkContactToCompany($contact_id, $company_id);
+    } else {
+        $email = trim($_POST['email']);
+        $first_name = trim($_POST['first_name']);
+        $last_name = trim($_POST['last_name']);
+        $contact_owner = trim($_POST['contact_owner']);
+        $phone = trim($_POST['phone']);
+        $lifecycle_stage = trim($_POST['lifecycle_stage']);
+        $lead_status = trim($_POST['lead_status']);
 
-        if ($check->rowCount() > 0) {
-            echo "This contact is already linked to the company.";
-            exit();
+        if (!$email || !$first_name || !$last_name) {
+            throw new Exception("Email, First Name, and Last Name are required.");
         }
 
-        // Insert link
-        $stmt = $pdo->prepare("INSERT INTO company_contacts (user_id, company_id, contact_id) VALUES (?, ?, ?)");
-        $stmt->execute([$userId, $companyId, $contactId]);
-
-        // Redirect or success
-        header("Location: /views/companies/view-company.php?id=" . $companyId);
-        exit();
-
-    } catch (PDOException $e) {
-        echo "Error linking contact: " . $e->getMessage();
-        exit();
+        $new_contact_id = $contactController->createAndLinkContact(
+            $user_id, $company_id, $email, $first_name, $last_name,
+            $contact_owner, $phone, $lifecycle_stage, $lead_status
+        );
     }
-} else {
-    echo "Invalid request method.";
+
+    header("Location: /views/companies/view-company.php?company_id=$company_id&success=1");
+    exit;
+
+} catch (Exception $e) {
+    header("Location: /views/companies/view-company.php?company_id=$company_id&error=" . urlencode($e->getMessage()));
+    exit;
 }

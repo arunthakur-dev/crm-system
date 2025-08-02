@@ -17,6 +17,9 @@ if (!isset($_SESSION['company_id']) || !is_numeric($_SESSION['company_id'])) {
     die("No company selected or invalid session.");
 }
 
+$companiesController = new CompaniesController();
+$contactCompanies = $companiesController->getCompaniesForContact($_SESSION['contact_id'], $_SESSION['user_id']);
+
 $company_id = $_SESSION['company_id'];
 $user_id = $_SESSION['user_id'];
 

@@ -16,7 +16,7 @@ require_once __DIR__ . '/../../includes/contacts/contacts-inc.php';
 </head>
 <body>
 
-<div class="wrapper">
+<div class="wrapper"> 
     <header class="navbar">
         <h2>CRM Demo</h2>
         <?php

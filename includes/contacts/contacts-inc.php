@@ -6,7 +6,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-$company_id = $_POST['company_id'] ?? $_SESSION['company_id'];
+// $company_id = $_POST['company_id'] ?? $_SESSION['company_id'];
 $sort = $_GET['sort'] ?? 'created_at'; // default sort
 $order = strtolower($_GET['order'] ?? 'desc'); // default order
 

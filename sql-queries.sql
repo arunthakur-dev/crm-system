@@ -20,9 +20,6 @@ DESCRIBE users;
 SELECT * FROM users;
  
 DROP TABLE users;
- 
-
-
 
 CREATE TABLE companies (
    company_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -57,10 +54,34 @@ SELECT * FROM companies;
 ALTER TABLE companies DROP COLUMN logo;
 ALTER TABLE companies ADD COLUMN phone VARCHAR(20) AFTER company_domain;
 ALTER TABLE companies ADD COLUMN logo varchar(255) AFTER phone;
-UPDATE companies company_id = 1 WHERE user_id=1;
+UPDATE companies SET company_id = 1 WHERE user_id=1;
 
-UPDATE companies user_id = 1 WHERE company_id=3;
+UPDATE companies SET user_id = 1 WHERE company_id=3;
 DROP TABLE companies;
+
+
+
+DROP TABLE IF EXISTS company_contacts;
+
+CREATE TABLE company_contacts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    company_id INT NOT NULL,
+    contact_id INT NOT NULL,
+    FOREIGN KEY (company_id) REFERENCES companies(company_id) ON DELETE CASCADE,
+    FOREIGN KEY (contact_id) REFERENCES contacts(contact_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_link (company_id, contact_id)
+);
+
+SELECT * FROM company_contacts;
+DROP TABLE company_contacts;
+TRUNCATE TABLE company_contacts;
+
+INSERT INTO company_contacts (user_id, company_id, contact_id)
+VALUES
+    (1, 11, 1),
+    (1, 11, 2),
+    (1, 11, 3);
+
 
 -- contacts table --
 CREATE TABLE contacts (
@@ -95,35 +116,55 @@ INSERT INTO contacts (
 
 
 SELECT * FROM contacts;
-UPDATE contacts user_id = 1 WHERE  contact_id=4;
+UPDATE contacts SET user_id=1 WHERE  contact_id=4;
 DROP TABLE contacts;
 DROP TABLE IF EXISTS contacts;
 ALTER TABLE contacts DISCARD TABLESPACE;
+DELETE FROM contacts WHERE contact_id = 2;
+SHOW COLUMNS FROM contacts;
 
 
 CREATE TABLE deals (
     deal_id INT AUTO_INCREMENT PRIMARY KEY,
-   user_id INT NOT NULL,
-    contact_id INT NOT NULL,
-   company_id INT NOT NULL,
+    user_id INT NOT NULL,
     title VARCHAR(255) NOT NULL,
-    value DECIMAL(12, 2),
-    stage ENUM('Lead', 'Negotiation', 'Won', 'Lost') NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES USERS(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (contact_id) REFERENCES CONTACTS(contact_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (company_id) REFERENCES COMPANIES(company_id) ON DELETE CASCADE ON UPDATE CASCADE
+    deal_stage ENUM('Visitor Engaged', 'Lead Captured', 'Demo Delivered', 'In Negotiation', 'Deal Won', 'Deal Lost') NOT NULL,
+    amount DECIMAL(10,2),
+    close_date DATE,
+    contact_owner VARCHAR(255),
+    deal_type ENUM('New', 'Existing'),
+    priority TINYINT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
-INSERT INTO deals (user_id, contact_id,company_id, title, value, stage) VALUES
--- John Doe's Deals
-(1, 1, 1, 'New Website Development', 15000.00, 'Negotiation'),
-(1, 3, 2, 'International Shipping Contract', 75000.00, 'Won'),
--- Jane Smith's Deals
-(2, 4, 3, 'Q4 Marketing Campaign', 25000.00, 'Lead'),
-(2, 5, 4, 'Medical Equipment Supply', 120000.00, 'Lost');
+DROP TABLE IF EXISTS deals;
+SELECT * from deals;
+ALTER TABLE deals CHANGE contact_owner deal_owner VARCHAR(255);
 
-UPDATE deals user_id = 1 WHERE  deal_id=3;
+CREATE TABLE contact_deals (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    deal_id INT NOT NULL,
+    contact_id INT NOT NULL,
+    FOREIGN KEY (deal_id) REFERENCES deals(deal_id) ON DELETE CASCADE,
+    FOREIGN KEY (contact_id) REFERENCES contacts(contact_id) ON DELETE CASCADE,
+    UNIQUE (deal_id, contact_id)
+);
+
+SELECT * FROM contact_deals;
+
+CREATE TABLE company_deals (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    deal_id INT NOT NULL,
+    company_id INT NOT NULL,
+    FOREIGN KEY (deal_id) REFERENCES deals(deal_id) ON DELETE CASCADE,
+    FOREIGN KEY (company_id) REFERENCES companies(company_id) ON DELETE CASCADE,
+    UNIQUE (deal_id, company_id)
+);
+
+SELECT * FROM company_deals;
+
+UPDATE deals SET user_id = 1 WHERE  deal_id=3;
 SELECT * FROM deals;
 DROP TABLE deals;
 

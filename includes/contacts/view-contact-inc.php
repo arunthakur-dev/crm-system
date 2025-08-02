@@ -17,10 +17,13 @@ if (!isset($_SESSION['contact_id']) || !is_numeric($_SESSION['contact_id'])) {
     die("No company selected or invalid session.");
 }
 
+$contactController = new ContactsController();
+$companyContacts = $contactController->getContactsForCompany($_SESSION['company_id'], $_SESSION['user_id']);
+
 $contact_id = $_SESSION['contact_id'];
 $user_id = $_SESSION['user_id'];
 
-// Fetch company details
+// Fetch contact details
 $contactController = new ContactsController();
 $contact = $contactController->getContactDetails($contact_id, $user_id);
 

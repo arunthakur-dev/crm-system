@@ -1,0 +1,82 @@
+.table-wrapper {
+    overflow-x: auto;
+    max-width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Make table full-width with separated borders */
+.linked-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 800px; /* Ensures horizontal scroll on smaller screens */
+    table-layout: auto;
+}
+
+/* Table header style */
+.linked-table thead th {
+    background-color: #f9f9f9;
+    font-weight: bold;
+    text-align: left;
+    padding: 12px;
+    border: 1px solid #ccc;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+/* Table body rows */
+.linked-table tbody td {
+    padding: 12px;
+    border: 1px solid #ccc;
+    white-space: nowrap;
+    font-size: 14px;
+}
+
+/* Avatar section */
+.avatar-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Avatar circle */
+.avatar-circle {
+    width: 30px;
+    height: 30px;
+    background-color: #007aff;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+
+.link {
+    text-decoration: none;
+    color: #139cbe;
+    font-weight: bold;
+    margin-left: 8px;
+    transition: color 0.2s ease;
+}
+
+.link:hover {
+    text-decoration: underline;
+    color: #0a6f91;
+}
+
+/* Optional: make it look like a normal link */
+.link-button {
+    background: none;
+    border: none;
+    padding: 0;
+    color: rgb(25, 33, 150);
+    text-decoration: underline;
+    cursor: pointer;
+    font: inherit;
+}

@@ -2,22 +2,75 @@
 require_once __DIR__ . '/../config/dbh.php'; // adjust path as per your project
 
 class ContactsModel extends Dbh {
-    protected function insertContact($contact_id, $user_id, $email, $first_name, $last_name,
-                                     $contact_owner, $phone, $lifecycle_stage, $lead_status
-                                    ) {
+
+    protected function insertContact($user_id, $email, $first_name, $last_name,
+                                 $contact_owner, $phone, $lifecycle_stage, $lead_status) {
         $sql = "INSERT INTO contacts (
-                   contact_id, user_id, email, first_name, last_name,
+                    user_id, email, first_name, last_name,
                     contact_owner, phone, lifecycle_stage, lead_status
-                ) VALUES (
-                    ?, ?, ?, ?, ?, ?, ?, ?, ?
-                )";
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = $this->connect()->prepare($sql);
         $stmt->execute([
-            $contact_id, $user_id, $email, $first_name, $last_name,
+            $user_id, $email, $first_name, $last_name,
             $contact_owner, $phone, $lifecycle_stage, $lead_status
         ]);
+
+        return $this->connect()->lastInsertId();  
     }
+
+
+    public function linkContactToCompany($contact_id, $company_id) {
+        $sql = "INSERT INTO company_contacts (contact_id, company_id) VALUES (?, ?)";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([$contact_id, $company_id]);
+    }
+
+    public function createAndLinkContact(
+        $user_id, $company_id,
+        $email, $first_name, $last_name,
+        $contact_owner, $phone, $lifecycle_stage, $lead_status
+    ) {
+        $this->connect()->beginTransaction();
+
+        try {
+            $new_contact_id = $this->insertContact(
+                $user_id, $email, $first_name, $last_name,
+                $contact_owner, $phone, $lifecycle_stage, $lead_status
+            );
+
+            $this->linkContactToCompany($new_contact_id, $company_id);
+
+            $this->connect()->commit();
+
+            return $new_contact_id;
+        } catch (Exception $e) {
+            $this->connect()->rollBack();
+            throw $e;
+        }
+    }
+
+
+    public function fetchContactsByUser($user_id) {
+        $sql = "SELECT * FROM contacts WHERE user_id = :user_id ORDER BY first_name ASC";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function fetchContactsForCompany($company_id, $user_id) {
+        $sql = "SELECT c.contact_id, c.first_name, c.last_name, c.email, c.phone
+                FROM contacts c
+                INNER JOIN company_contacts cc ON c.contact_id = cc.contact_id
+                WHERE cc.company_id = :company_id AND c.user_id = :user_id";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(':company_id', $company_id, PDO::PARAM_INT);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
 //     public function fetchCompaniesByUser($user_id) {
 //         $sql = "SELECT * 
@@ -166,7 +219,5 @@ class ContactsModel extends Dbh {
 
 //     // models/contactModel.php
 
-
-
-
+    
 }

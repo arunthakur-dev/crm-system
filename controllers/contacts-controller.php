@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../models/contacts-model.php';
+require_once __DIR__ . '/../models/contacts-model.php'; 
 class ContactsController extends ContactsModel {
     private $contact_id, $user_id, $email, $first_name, $last_name,
             $contact_owner, $phone, $lifecycle_stage, $lead_status;
@@ -16,18 +16,17 @@ class ContactsController extends ContactsModel {
         $this->lead_status = $lead_status;
     }
 
-    public function createContact() {
-        // Basic validation
-        if (empty($this->contact_id) || empty($this->user_id) || empty($this->email) || empty($this->first_name) || empty($this->last_name)) {
-            die("Email, first name, and last name is required.");
+    public function createContact($user_id, $email, $first_name, $last_name, $contact_owner, $phone, $lifecycle_stage, $lead_status) {
+        if (empty($email) || empty($first_name) || empty($last_name)) {
+            throw new Exception("Email, First Name, and Last Name are required.");
         }
 
-        // Call Model
-        $this->insertContact(
-            $this->contact_id, $this->user_id, $this->email, $this->first_name,
-            $this->last_name, $this->contact_owner, $this->phone,
-            $this->lifecycle_stage, $this->lead_status       );
+        return $this->insertContact(
+            $user_id, $email, $first_name, $last_name,
+            $contact_owner, $phone, $lifecycle_stage, $lead_status
+        );
     }
+
 
     public function getContactDetails($contact_id, $user_id) {
         return $this->fetchContactById($contact_id, $user_id);
@@ -56,7 +55,13 @@ class ContactsController extends ContactsModel {
     //     return $this->getMyCompanies($user_id, $sort, $order);
     // }
 
+    public function getContactsByUser($user_id) {
+        return $this->fetchContactsByUser($user_id);
+    }
 
+    public function getContactsForCompany($company_id, $user_id) {
+        return $this->fetchContactsForCompany($company_id, $user_id);
+    }
     // // Update contact 
     // public function updatecontact($contact_id, $user_id, $contact_domain, $name, $owner,
     //                           $industry, $country, $state, $postal_code, $employees, $notes) {

@@ -16,11 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id        = $_SESSION['user_id']; // from logged-in user session
 
     // Pass to controller
-    $contactController = new ContactsController(
-        $contact_id, $user_id, $email, $first_name, $last_name,
-        $contact_owner, $phone, $lifecycle_stage, $lead_status
-    );
-    $contactController->createContact();
+    $contactController = new ContactsController();
+    $contactController->createContact($user_id, $email, $first_name, $last_name, $contact_owner, $phone, $lifecycle_stage, $lead_status);
 
     // Redirect after success (optional)
     header('Location: /../views/contacts/contacts.php?status=success');

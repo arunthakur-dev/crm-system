@@ -15,17 +15,14 @@ class CompaniesController extends CompaniesModel {
         $this->employees = $employees; $this->notes = $notes;
     }
 
-    public function createCompany() {
-        // Basic validation
-        if (empty($this->name)) {
-            die("Company name is required.");
-        }
-
+    public function createCompany($user_id, $company_domain, $name, $owner,
+        $industry, $country, $state, $postal_code, $employees, $notes) {
+         
         // Call Model
         $this->insertCompany(
-            $this->user_id, $this->company_domain, $this->name, $this->owner,
-            $this->industry, $this->country, $this->state,
-            $this->postal_code, $this->employees, $this->notes
+            $user_id, $company_domain, $name, $owner,
+            $industry, $country, $state,
+            $postal_code, $employees, $notes
         );
     }
 
@@ -53,6 +50,13 @@ class CompaniesController extends CompaniesModel {
         return $this->searchCompanies($user_id, $searchTerm, $filter, $sort, $order);
     }
 
+    public function getCompaniesByUser($user_id) {
+        return $this->fetchCompaniesByUser($user_id);
+    }
+
+    public function getCompaniesForContact($contact_id, $user_id) {
+        return $this->fetchCompaniesForContact($contact_id, $user_id);
+    }
     // Update company 
     public function updateCompany($company_id, $user_id, $company_domain, $name, $owner,
                               $industry, $country, $state, $postal_code, $employees, $notes) {

@@ -11,7 +11,7 @@ $allContacts = $contactController->getContactsByUser($user_id);
 <!-- Contact Sidebar -->
 <div id="contactSidebar" class="sidebar sidebar-form hidden">
     <div class="sidebar-header blue-header">
-        <h3>Add New Contact</h3>
+        <h3>Add New Contact -> Deal</h3>
         <button class="close-sidebar">&times;</button>
     </div>
 
@@ -25,8 +25,8 @@ $allContacts = $contactController->getContactsByUser($user_id);
     <div class="tab-content-wrapper">
         <!-- Create New Contact Form -->
         
-        <form action="/includes/contacts/link-contact-to-company.php" method="POST" class="tab-content active" id="new">
-            <input type="hidden" name="company_id" value="<?= $company['company_id'] ?>">
+        <form action="/includes/deals/link-deal-to-contact.php" method="POST" class="tab-content active" id="new">
+            <input type="hidden" name="contact_id" value="<?= $contact['contact_id'] ?>">
             <label for="email">Email </label>
             <input type="email" name="email" placeholder="Email">
 
@@ -72,14 +72,14 @@ $allContacts = $contactController->getContactsByUser($user_id);
         </form>
 
         <!-- Add Existing Contact Form -->
-        <form action="/includes/contacts/link-contact-to-company.php" method="POST" class="tab-content" id="existing">
+        <form action="/includes/deals/link-deal-to-contact.php" method="POST" class="tab-content" id="existing">
             <select name="existing_contact_id" required>
                 <option value="">Select existing contact</option>
                 <?php foreach ($allContacts as $contact): ?>
                     <option value="<?= $contact['contact_id'] ?>"><?= htmlspecialchars($contact['first_name']) ?> <?= htmlspecialchars($contact['last_name']) ?> - <?= htmlspecialchars($contact['email']) ?></option>
                 <?php endforeach; ?>
             </select>
-            <input type="hidden" name="company_id" value="<?= $company['company_id'] ?>">
+            <input type="hidden" name="contact_id" value="<?= $contact['contact_id'] ?>">
             <div class="form-actions">
                 <button type="submit">Add</button>
             </div>

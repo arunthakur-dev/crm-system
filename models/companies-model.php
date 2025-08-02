@@ -18,19 +18,63 @@ class CompaniesModel extends Dbh {
             $industry, $country, $state, $postal_code,
             $employees, $notes
         ]);
+        return $this->connect()->lastInsertId();  
+    }
+
+    public function linkCompanyToContact($company_id, $contact_id) {
+        $sql = "INSERT INTO company_contacts (company_id, contact_id) VALUES (?, ?)";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([$company_id, $contact_id]);
+    }
+
+
+    public function createAndLinkCompany(
+        $user_id, $contact_id, $company_domain, $name, $owner,
+        $industry, $country, $state, $postal_code,
+        $employees, $notes
+    ) {
+        $this->connect()->beginTransaction();
+
+        try {
+            // Step 1: Create new company and get its ID
+            $new_company_id = $this->insertCompany($user_id, $company_domain, $name, $owner,
+            $industry, $country, $state, $postal_code,
+            $employees, $notes);
+
+            // Step 2: Link it to the contact
+            $this->linkCompanyToContact($new_company_id, $contact_id);
+
+            // Step 3: Commit
+            $this->connect()->commit();
+
+            return $new_company_id;
+        } catch (Exception $e) {
+            $this->connect()->rollBack();
+            throw $e;
+        }
     }
 
     public function fetchCompaniesByUser($user_id) {
-        $sql = "SELECT * 
-                FROM companies 
-                WHERE user_id = ? 
-                ORDER BY created_at DESC";
-
+        $sql = "SELECT * FROM companies WHERE user_id = :user_id ORDER BY name ASC";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$user_id]);
-
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+
+    public function fetchCompaniesForContact($contact_id, $user_id) {
+        $sql = "SELECT comp.company_id, comp.name, comp.company_domain, comp.industry, comp.country, comp.phone
+                FROM companies comp
+                INNER JOIN company_contacts cc ON comp.company_id = cc.company_id
+                WHERE cc.contact_id = :contact_id AND comp.user_id = :user_id";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(':contact_id', $contact_id, PDO::PARAM_INT);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
     public function fetchCompanyById($company_id, $user_id) {
         $stmt = $this->connect()->prepare(

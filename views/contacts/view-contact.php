@@ -1,8 +1,12 @@
 <?php
 require_once __DIR__ . '/../../config/session-config.php';
 require_once __DIR__ . '/../../includes/contacts/view-contact-inc.php';
+require_once __DIR__ . '/../../includes/companies/view-company-inc.php';
 require_once __DIR__ . '/_edit-contact-form.php';
 require_once __DIR__ . '/_delete-contact-form.php';
+
+require_once __DIR__ . '/add-deal-form.php';
+require_once __DIR__ . '/add-company-form.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -11,7 +15,10 @@ require_once __DIR__ . '/_delete-contact-form.php';
     <title><?= htmlspecialchars($contact['first_name'] . ' ' . $contact['last_name']) ?> | Contact Details</title>
     <link rel="stylesheet" href="/../../public/assets/css/view-company.css">
     <link rel="stylesheet" href="/../../public/assets/css/dashboard.css">
+    <link rel="stylesheet" href="/../../public/assets/css/add-contact.css">
+    <link rel="stylesheet" href="/../../public/assets/css/associated-tables.css">
     <script defer src="/../../public/assets/js/edit-company.js"></script>
+    <script defer src="/../../public/assets/js/sidebar-forms.js"></script>
 </head>
 <body>
     <div class="wrapper">
@@ -110,13 +117,51 @@ require_once __DIR__ . '/_delete-contact-form.php';
             <div><strong>Last Activity Date:</strong><br><hr>----</div>
         </div>
         <div class="linked-section">
-            <h3>Contacts</h3>
-            <p>No associated contacts yet.</p>
-        </div>
+            <div class="section-header">
+                <h3><strong>Associated Companies</strong></h3>
+                <button class="add-btn" data-target="companySidebar">+ Add</button>
+            </div>
 
-        <div class="linked-section">
-            <h3>Companies</h3>
-            <p>No associated deals yet.</p>
+            <?php if (empty($companyContacts)): ?>
+                <p>No associated contacts yet.</p>
+            <?php else: ?>
+                <div class="table-wrapper">
+                    <table class="linked-table">
+                        <!-- <?php var_dump($contactCompanies); ?> -->
+                        <thead>
+                            <tr>
+                                <th>COMPANY NAME</th>
+                                <th>DOMAIN</th>
+                                <th>INDUSTRY</th>
+                                <th>COUNTRY</th>
+                                <th>PHONE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($contactCompanies as $company): ?>
+                                <tr>
+                                    <td>
+                                        <div class="avatar-name">
+                                            <div class="avatar-circle">
+                                                <?= strtoupper(substr($company['name'], 0, 1)) ?>
+                                            </div>
+                                            <form method="POST" action="../companies/view-company.php" style="display:inline;">
+                                                <input type="hidden" name="company_id" value="<?= $company['company_id'] ?>">
+                                                <button type="submit" class="link-button">
+                                                    <strong><?= htmlspecialchars($company['name']  ?? '') ?></strong>
+                                                </button>
+                                            </form>
+                                    </td>
+                                    <td><?= $company['company_domain'] ?: '--' ?></td>
+                                    <td><?= $company['industry'] ?: '--' ?></td>
+                                    <td><?= $company['country'] ?: '--' ?></td>
+                                    <td><?= $contact['phone'] ?: '--' ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php endif; ?>
         </div>
         
         <div class="linked-section">
