@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
 
         if ($stmt->execute()) {
-            unset($_SESSION['deal_id']); // Optional cleanup
+            unset($_SESSION['deal_id']);
             header("Location: /../../views/deals/deals.php?deleted=1");
             exit();
         } else {

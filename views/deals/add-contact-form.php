@@ -4,14 +4,14 @@ ob_start();
 require_once __DIR__ . '/../../controllers/contacts-controller.php';
 
 $contactController = new ContactsController();
-$user_id = $_SESSION['user_id']; // assuming user_id is stored in session
+$user_id = $_SESSION['user_id'];  
 $allContacts = $contactController->getContactsByUser($user_id);
-
 ?>
+
 <!-- Contact Sidebar -->
 <div id="contactSidebar" class="sidebar sidebar-form hidden">
     <div class="sidebar-header blue-header">
-        <h3>Add New Contact -> Deal</h3>
+        <h3>Add New Contact</h3>
         <button class="close-sidebar">&times;</button>
     </div>
 
@@ -26,7 +26,7 @@ $allContacts = $contactController->getContactsByUser($user_id);
         <!-- Create New Contact Form -->
         
         <form action="/includes/deals/link-deal-to-contact.php" method="POST" class="tab-content active" id="new">
-            <input type="hidden" name="contact_id" value="<?= $contact['contact_id'] ?>">
+            <input type="hidden" name="deal_id" value="<?= $deal['deal_id'] ?>">
             <label for="email">Email </label>
             <input type="email" name="email" placeholder="Email">
 
@@ -79,7 +79,7 @@ $allContacts = $contactController->getContactsByUser($user_id);
                     <option value="<?= $contact['contact_id'] ?>"><?= htmlspecialchars($contact['first_name']) ?> <?= htmlspecialchars($contact['last_name']) ?> - <?= htmlspecialchars($contact['email']) ?></option>
                 <?php endforeach; ?>
             </select>
-            <input type="hidden" name="contact_id" value="<?= $contact['contact_id'] ?>">
+            <input type="hidden" name="deal_id" value="<?= $deal['deal_id'] ?>">
             <div class="form-actions">
                 <button type="submit">Add</button>
             </div>

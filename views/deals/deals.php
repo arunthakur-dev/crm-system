@@ -66,7 +66,6 @@ require_once __DIR__ . '/../../includes/deals/deals-inc.php';
         <div class="company-tabs-wrapper">
             <div class="company-tabs">
                 <a href="?filter=all" class="tab-link <?= (!isset($_GET['filter']) || $_GET['filter'] === 'all') ? 'active' : '' ?>">All Deals</a>
-                <a href="?filter=my" class="tab-link <?= ($_GET['filter'] ?? '') === 'my' ? 'active' : '' ?>">My Deals</a>
                 <a href="?filter=recent" class="tab-link <?= ($_GET['filter'] ?? '') === 'recent' ? 'active' : '' ?>">Recently Added</a>
             </div>
         </div>
@@ -114,11 +113,11 @@ require_once __DIR__ . '/../../includes/deals/deals-inc.php';
                                         </button>
                                     </form>
                                 </td>
-                                <td><?= htmlspecialchars($deal['deal_stage']) ?></td>
-                                <td>₹<?= number_format($deal['amount'], 2) ?></td>
-                                <td><?= htmlspecialchars($deal['close_date']) ?></td>
-                                <td><?= htmlspecialchars($deal['deal_owner']) ?></td>
-                                <td><?= htmlspecialchars($deal['deal_type']) ?></td>
+                                <td><?= htmlspecialchars($deal['deal_stage']) ?: '--'?></td>
+                                <td>₹<?= number_format($deal['amount'], 2) ?: '--' ?></td>
+                                <td><?= htmlspecialchars($deal['close_date']) ?: '--'?></td>
+                                <td><?= htmlspecialchars($deal['deal_owner']) ?: '--'?></td>
+                                <td><?= htmlspecialchars($deal['deal_type']) ?: '--'?></td>
                                 <td>
                                     <?php
                                     switch ($deal['priority']) {

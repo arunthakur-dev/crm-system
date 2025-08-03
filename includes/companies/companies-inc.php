@@ -28,9 +28,6 @@ if (!empty($search)) {
     $companies = $companyController->getSearchedCompanies($_SESSION['user_id'], $search, $filter, $sort, $order);
 } else {
     switch ($filter) {
-        case 'my':
-            $companies = $companyController->getSortedMyCompanies($_SESSION['user_id'], $sort, $order);
-            break;
         case 'recent':
             $companies = $companyController->getRecentSortedCompanies($_SESSION['user_id'], 10, $sort, $order);
             break;

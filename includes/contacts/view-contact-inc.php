@@ -3,7 +3,7 @@ require_once __DIR__ . '/../../config/session-config.php';
 require_once __DIR__ . '/../../controllers/contacts-controller.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: ../auth/login.php');
+    header('Location: ../auth/login.php'); 
     exit();
 }
 
@@ -17,10 +17,11 @@ if (!isset($_SESSION['contact_id']) || !is_numeric($_SESSION['contact_id'])) {
     die("No company selected or invalid session.");
 }
 
-$contactController = new ContactsController();
-$companyContacts = $contactController->getContactsForCompany($_SESSION['company_id'], $_SESSION['user_id']);
+$contactModel = new ContactsModel();
+$contactCompanies = $contactModel->fetchCompaniesForContact($_SESSION['contact_id'], $_SESSION['user_id']);
+$contactDeals = $contactModel->fetchDealsForContact($_SESSION['contact_id'], $_SESSION['user_id']);
 
-$contact_id = $_SESSION['contact_id'];
+$contact_id = $_SESSION['contact_id'] ?? null;
 $user_id = $_SESSION['user_id'];
 
 // Fetch contact details

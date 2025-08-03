@@ -23,7 +23,7 @@ $allCompanies = $companyController->getCompaniesByUser($user_id);
     <div class="tab-content-wrapper">
         <!-- Create New Company Form -->
         <form action="/includes/deals/link-deal-to-company.php" method="POST" class="tab-content active" id="new-company" enctype="multipart/form-data">
-            <input type="hidden" name="contact_id" value="<?= $contact['contact_id'] ?>">
+            <input type="hidden" name="deal_id" value="<?= $deal['deal_id'] ?>">
             <label for="company_domain">Company Domain</label>
             <input type="text" id="company_domain" name="company_domain" placeholder="e.g. example.com"  >
 
@@ -77,7 +77,7 @@ $allCompanies = $companyController->getCompaniesByUser($user_id);
                     </option>
                 <?php endforeach; ?>
             </select>
-            <input type="hidden" name="contact_id" value="<?= $contact['contact_id'] ?>">
+            <input type="hidden" name="deal_id" value="<?= $deal['deal_id'] ?>">
 
             <div class="form-actions">
                 <button type="submit" class="btn">Link</button>

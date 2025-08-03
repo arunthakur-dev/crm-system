@@ -7,7 +7,11 @@ require_once __DIR__ . '/_delete-contact-form.php';
 
 require_once __DIR__ . '/add-deal-form.php';
 require_once __DIR__ . '/add-company-form.php';
+
+$contactController = new ContactsController();
+$contact = $contactController->getContactDetails($contact_id, $user_id);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,7 +26,7 @@ require_once __DIR__ . '/add-company-form.php';
 </head>
 <body>
     <div class="wrapper">
-        <header class="navbar">
+        <header class="navbar"> 
         <h2>CRM Demo</h2>
             <?php
             $currentPage = basename($_SERVER['PHP_SELF']);
@@ -62,12 +66,12 @@ require_once __DIR__ . '/add-company-form.php';
 
         <!-- Actions -->
         <div class="company-actions">
-            <button title="Note">📝</button>
-            <button title="Email">✉️</button>
-            <button title="Call">📞</button>
-            <button title="Task">✅</button>
-            <button title="Meeting">📅</button>
-            <button title="More">⋯</button>
+            <button title="Note">🗒</button>
+            <button title="Email">&#9993;</button>
+            <button title="Call">&#9742;</button>
+            <button title="Task">&#10004;</button>
+            <button title="Meeting">&#128197;</button>
+            <button title="More">&#8942;</button>
         </div>
 
         <!-- About Section -->
@@ -122,12 +126,11 @@ require_once __DIR__ . '/add-company-form.php';
                 <button class="add-btn" data-target="companySidebar">+ Add</button>
             </div>
 
-            <?php if (empty($companyContacts)): ?>
+            <?php if (empty($contactCompanies)): ?>
                 <p>No associated contacts yet.</p>
             <?php else: ?>
                 <div class="table-wrapper">
                     <table class="linked-table">
-                        <!-- <?php var_dump($contactCompanies); ?> -->
                         <thead>
                             <tr>
                                 <th>COMPANY NAME</th>
@@ -165,8 +168,48 @@ require_once __DIR__ . '/add-company-form.php';
         </div>
         
         <div class="linked-section">
-            <h3>Deals</h3>
-            <p>No associated deals yet.</p>
+            <div class="section-header">
+                    <h3><strong>Associated Deals</strong></h3>
+                    <button class="add-btn" data-target="dealSidebar">+ Add</button>
+                </div>
+            <?php if (empty($contactDeals)): ?>
+                <p>No associated contacts yet.</p>
+            <?php else: ?>
+                <div class="table-wrapper">
+                    <table class="linked-table">
+                        <thead>
+                            <tr>
+                                <th>TITLE</th>
+                                <th>AMOUNT</th>
+                                <th>CLOSE DATE</th>
+                                <th>DEAL STAGE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($contactDeals as $deal): ?>
+                                <tr>
+                                    <td>
+                                        <div class="avatar-name">
+                                            <div class="avatar-circle">
+                                                <?= strtoupper(substr($deal['title'], 0, 1)) ?>
+                                            </div>
+                                            <form method="POST" action="../deals/view-deal.php" style="display:inline;">
+                                                <input type="hidden" name="deal_id" value="<?= $deal['deal_id'] ?>">
+                                                <button type="submit" class="link-button">
+                                                    <strong><?= htmlspecialchars($deal['title']  ?? '') ?></strong>
+                                                </button>
+                                            </form>
+                                    </td>
+                                    <td><?= $deal['amount'] ?: '--' ?></td>
+                                    <td><?= $deal['close_date'] ?: '--' ?></td>
+                                    <td><?= $deal['deal_stage'] ?: '--' ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php endif; ?>
+
         </div>
         
     </main>

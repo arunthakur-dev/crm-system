@@ -1,3 +1,19 @@
+<?php
+ob_start();
+
+require_once __DIR__ . '/../../controllers/contacts-controller.php';
+
+$contactController = new ContactsController();
+$user_id = $_SESSION['user_id'];
+$allContacts = $contactController->getContactsByUser($user_id);
+
+require_once __DIR__ . '/../../controllers/companies-controller.php';
+
+$companyController = new CompaniesController();
+$user_id = $_SESSION['user_id'];
+$allCompanies = $companyController->getCompaniesByUser($user_id);  
+?>
+
 <div id="contactSidebar" class="sidebar hidden">
     <div class="sidebar-header blue-header">
         <h2>Create New Deal</h2>
@@ -35,7 +51,6 @@
             <option value="Existing">Existing Bussiness</option>
         </select>
 
-
         <label for="priority">Priority</label>
         <select id="priority" name="priority"  >
             <option value="">--Select Deal Type--</option>
@@ -52,23 +67,20 @@
         <label for="associated_contact">Contact</label>
         <select id="associated_contact" name="associated_contact">
             <option value="">--Select Contact--</option>
-            <?php foreach ($contacts as $contact): ?>
-                <option value="<?= htmlspecialchars($contact['contact_id']) ?>">
-                    <?= htmlspecialchars($contact['first_name'] . ' ' . $contact['last_name']) ?>
-                </option>
-            <?php endforeach; ?>
+                <?php foreach ($allContacts as $contact): ?>
+                    <option value="<?= $contact['contact_id'] ?>"><?= htmlspecialchars($contact['first_name']) ?> <?= htmlspecialchars($contact['last_name']) ?> - <?= htmlspecialchars($contact['email']) ?></option>
+                <?php endforeach; ?>
         </select>
 
         <label for="associated_company">Company</label>
         <select id="associated_company" name="associated_company">
-            <option value="">--Select Company--</option>
-            <?php foreach ($companies as $company): ?>
-                <option value="<?= htmlspecialchars($company['company_id']) ?>">
-                    <?= htmlspecialchars($company['name']) ?>
-                </option>
-            <?php endforeach; ?>
+            <option value="">--Select a company--</option>
+                <?php foreach ($allCompanies as $company): ?>
+                    <option value="<?= $company['company_id'] ?>">
+                        <strong><?= htmlspecialchars($company['name']) ?> - <?= htmlspecialchars($company['company_domain']) ?> 
+                    </option>
+                <?php endforeach; ?>
         </select>
-
         <button type="submit">Create</button><br><br><br>
     </form>
 </div>

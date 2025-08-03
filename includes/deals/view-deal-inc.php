@@ -17,6 +17,12 @@ if (!isset($_SESSION['deal_id']) || !is_numeric($_SESSION['deal_id'])) {
     die("No deal selected or invalid session.");
 }
 
+
+$dealController = new DealsController();
+$dealContacts = $dealController->getContactsForDeal($_SESSION['deal_id'], $_SESSION['user_id']);
+$dealCompanies = $dealController->getCompaniesForDeal($_SESSION['deal_id'], $_SESSION['user_id']);
+
+
 $deal_id = $_SESSION['deal_id'];
 $user_id = $_SESSION['user_id'];
 

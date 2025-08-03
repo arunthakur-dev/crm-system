@@ -12,8 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $deal_owner = trim($_POST['deal_owner'] ?? '');
     $deal_type = trim($_POST['deal_type'] ?? '');
     $priority = trim($_POST['priority'] ?? '');
-    $associated_contact_id = $_POST['company_id'] ?? null;
-    $associated_contact_id = $_POST['contact_id'] ?? null;
+    $associated_company_id = $_POST['associated_company'] ?? null;
+    $associated_contact_id = $_POST['associated_contact'] ?? null;
+
     $user_id = $_SESSION['user_id'];
 
     try {

@@ -32,10 +32,6 @@ class ContactsController extends ContactsModel {
         return $this->fetchContactById($contact_id, $user_id);
     }
 
-    // public function getcontactById($contact_id, $user_id) {
-    //     return $this->fetchcontactById($contact_id, $user_id);
-    // }
-
     public function getRecentSortedContacts($user_id, $limit = 10, $sort = 'created_at', $order = 'desc') {
         return $this->fetchRecentSortedContacts($user_id, $limit, $sort, $order);
     }
@@ -44,40 +40,11 @@ class ContactsController extends ContactsModel {
         return $this->fetchSortedContacts($user_id,  $sort, $order);
     }
 
-    public function getSortedMyContacts($user_id, $sort, $order) {
-        return $this->fetchSortedMyContacts($user_id, $sort, $order);
-    }
-
     public function getSearchedContacts($user_id, $searchTerm, $filter = 'all', $sort = 'created_at', $order = 'desc') {
         return $this->searchContacts($user_id, $searchTerm, $filter, $sort, $order);
     }
-    // public function getSortedMyCompanies($user_id, $sort, $order) {
-    //     return $this->getMyCompanies($user_id, $sort, $order);
-    // }
 
     public function getContactsByUser($user_id) {
         return $this->fetchContactsByUser($user_id);
     }
-
-    public function getContactsForCompany($company_id, $user_id) {
-        return $this->fetchContactsForCompany($company_id, $user_id);
-    }
-    // // Update contact 
-    // public function updatecontact($contact_id, $user_id, $contact_domain, $name, $owner,
-    //                           $industry, $country, $state, $postal_code, $employees, $notes) {
-    //     if (empty($name)) {
-    //         die("contact name is required.");
-    //     }
-
-    //     // Call the model function 
-    //     $this->updatecontact(
-    //         $contact_id, $user_id, $contact_domain, $name, $owner,
-    //         $industry, $country, $state, $postal_code, $employees, $notes
-    //     );
-    // }
-
-    // // Delete contact
-    // public function deletecontact($contact_id, $user_id) {
-    //     parent::deletecontact($contact_id, $user_id);
-    // }
 }

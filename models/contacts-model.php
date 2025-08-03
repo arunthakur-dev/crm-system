@@ -3,7 +3,7 @@ require_once __DIR__ . '/../config/dbh.php'; // adjust path as per your project
 
 class ContactsModel extends Dbh {
 
-    protected function insertContact($user_id, $email, $first_name, $last_name,
+    public function insertContact($user_id, $email, $first_name, $last_name,
                                  $contact_owner, $phone, $lifecycle_stage, $lead_status) {
         $sql = "INSERT INTO contacts (
                     user_id, email, first_name, last_name,
@@ -18,7 +18,6 @@ class ContactsModel extends Dbh {
 
         return $this->connect()->lastInsertId();  
     }
-
 
     public function linkContactToCompany($contact_id, $company_id) {
         $sql = "INSERT INTO company_contacts (contact_id, company_id) VALUES (?, ?)";
@@ -50,7 +49,6 @@ class ContactsModel extends Dbh {
         }
     }
 
-
     public function fetchContactsByUser($user_id) {
         $sql = "SELECT * FROM contacts WHERE user_id = :user_id ORDER BY first_name ASC";
         $stmt = $this->connect()->prepare($sql);
@@ -58,31 +56,6 @@ class ContactsModel extends Dbh {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
-    public function fetchContactsForCompany($company_id, $user_id) {
-        $sql = "SELECT c.contact_id, c.first_name, c.last_name, c.email, c.phone
-                FROM contacts c
-                INNER JOIN company_contacts cc ON c.contact_id = cc.contact_id
-                WHERE cc.company_id = :company_id AND c.user_id = :user_id";
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->bindParam(':company_id', $company_id, PDO::PARAM_INT);
-        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-
-//     public function fetchCompaniesByUser($user_id) {
-//         $sql = "SELECT * 
-//                 FROM companies 
-//                 WHERE user_id = ? 
-//                 ORDER BY created_at DESC";
-
-//         $stmt = $this->connect()->prepare($sql);
-//         $stmt->execute([$user_id]);
-
-//         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-//     }
 
     public function fetchContactById($contact_id, $user_id) {
         $stmt = $this->connect()->prepare(
@@ -117,63 +90,26 @@ class ContactsModel extends Dbh {
     }
 
     public function fetchRecentSortedContacts($user_id, $limit = 10, $sort = 'created_at', $order = 'desc') {
-    $validSortFields = ['email', 'first_name', 'last_name', 'contact_owner', 'phone', 'lifecycle_stage', 'lead_status', 'created_at'];
-    $validOrders = ['asc', 'desc'];
+        $validSortFields = ['email', 'first_name', 'last_name', 'contact_owner', 'phone', 'lifecycle_stage', 'lead_status', 'created_at'];
+        $validOrders = ['asc', 'desc'];
 
-    // Sanitize
-    if (!in_array($sort, $validSortFields)) {
-        $sort = 'created_at';
-    }
-    if (!in_array(strtolower($order), $validOrders)) {
-        $order = 'desc';
-    }
+        // Sanitize
+        if (!in_array($sort, $validSortFields)) {
+            $sort = 'created_at';
+        }
+        if (!in_array(strtolower($order), $validOrders)) {
+            $order = 'desc';
+        }
 
-    $stmt = $this->connect()->prepare("SELECT * FROM contacts WHERE  user_id = :user_id ORDER BY $sort $order LIMIT :limit");
-    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-    $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
-    $stmt->execute();
-
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-    public function fetchSortedMyContacts( $user_id, $sort = 'created_at', $order = 'desc') {
-        $stmt = $this->connect()->prepare("
-            SELECT * FROM contacts 
-            WHERE  user_id = :user_id 
-            ORDER BY $sort $order
-        ");
-        $stmt->bindParam(':user_id', $user_id);
+        $stmt = $this->connect()->prepare("SELECT * FROM contacts WHERE  user_id = :user_id ORDER BY $sort $order LIMIT :limit");
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
         $stmt->execute();
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-//     // In CompaniesModel
-//     public function fetchMyCompanies($user_id) {
-//         $sql = "SELECT * FROM companies 
-//                 WHERE user_id = :user_id 
-//                 ORDER BY created_at DESC";
-
-//         $stmt = $this->connect()->prepare($sql);
-//         $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
-//         $stmt->execute();
-
-//         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-//     }
-
-//     // Update contact
-//     public function updatecontact($contact_id, $user_id, $contact_domain, $name, $owner,
-//                                 $industry, $country, $state, $postal_code, $employees, $notes) {
-//         $sql = "UPDATE companies SET 
-//                     contact_domain = ?, name = ?, owner = ?, industry = ?, country = ?,
-//                     state = ?, postal_code = ?, employees = ?, notes = ?
-//                 WHERE contact_id = ? ANDuser_id = ?";
-//         $stmt = $this->connect()->prepare($sql);
-//         $stmt->execute([
-//             $contact_domain, $name, $owner, $industry, $country,
-//             $state, $postal_code, $employees, $notes, $contact_id, $user_id
-//         ]);
-//     }
-
+    
     public function searchContacts($user_id, $searchTerm, $filter = 'all', $sort = 'created_at', $order = 'desc') {
         $searchTerm = '%' . $searchTerm . '%';
 
@@ -210,14 +146,48 @@ class ContactsModel extends Dbh {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-//     // Delete contact
-//     public function deletecontact($contact_id, $user_id) {
-//         $sql = "DELETE FROM companies WHERE contact_id = ? ANDuser_id = ?";
-//         $stmt = $this->connect()->prepare($sql);
-//         $stmt->execute([$contact_id, $user_id]);
-//     }
+    public function getSortedRecentContacts($user_id, $limit = 5, $sort = 'created_at', $order = 'desc') {
+        $validSortFields = ['first_name', 'last_name', 'email', 'phone', 'job_title', 'created_at'];
+        $validOrders = ['asc', 'desc'];
 
-//     // models/contactModel.php
+        // Sanitize inputs
+        if (!in_array($sort, $validSortFields)) {
+            $sort = 'created_at';
+        }
+        if (!in_array(strtolower($order), $validOrders)) {
+            $order = 'desc';
+        }
 
-    
+        $sql = "SELECT * FROM contacts WHERE user_id = :user_id ORDER BY $sort $order LIMIT :limit";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function fetchDealsForContact($contact_id, $user_id) {
+        $sql = "SELECT d.deal_id, d.title, d.amount, d.deal_stage, d.close_date
+                FROM deals d
+                INNER JOIN contact_deals cd ON d.deal_id = cd.deal_id
+                WHERE cd.contact_id = :contact_id AND d.user_id = :user_id";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(':contact_id', $contact_id, PDO::PARAM_INT);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function fetchCompaniesForContact($contact_id, $user_id) {
+        $sql = "SELECT c.company_id, c.name, c.company_domain, c.phone, c.industry, c.country, c.state, c.postal_code
+                FROM companies c
+                INNER JOIN company_contacts cc ON c.company_id = cc.company_id
+                WHERE cc.contact_id = :contact_id AND c.user_id = :user_id";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(':contact_id', $contact_id, PDO::PARAM_INT);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

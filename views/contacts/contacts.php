@@ -65,7 +65,6 @@ require_once __DIR__ . '/../../includes/contacts/contacts-inc.php';
         <div class="company-tabs-wrapper">
             <div class="company-tabs">
                 <a href="?filter=all" class="tab-link <?= (!isset($_GET['filter']) || $_GET['filter'] === 'all') ? 'active' : '' ?>">All Conatcts</a>
-                <a href="?filter=my" class="tab-link <?= ($_GET['filter'] ?? '') === 'my' ? 'active' : '' ?>">My Contacts</a>
                 <a href="?filter=recent" class="tab-link <?= ($_GET['filter'] ?? '') === 'recent' ? 'active' : '' ?>">Recently Added</a>
             </div>
         </div>
@@ -114,14 +113,14 @@ require_once __DIR__ . '/../../includes/contacts/contacts-inc.php';
                                         </button>
                                     </form>
                                 </td>
-                                <td><?= htmlspecialchars($contact['email']) ?></td>
-                                <td><?= htmlspecialchars($contact['first_name']) ?></td>
-                                <td><?= htmlspecialchars($contact['last_name']) ?></td>
-                                <td><?= htmlspecialchars($contact['contact_owner']) ?></td>
-                                <td><?= htmlspecialchars($contact['phone']) ?></td>
-                                <td><?= htmlspecialchars($contact['lifecycle_stage']) ?></td>
-                                <td><?= htmlspecialchars($contact['lead_status']) ?></td>
-                                <td><?= date('d M Y, h:i A', strtotime($contact['created_at'])) ?></td>
+                                <td><?= htmlspecialchars($contact['email'] ?: "--") ?></td>
+                                <td><?= htmlspecialchars($contact['first_name'] ?: "--") ?></td>
+                                <td><?= htmlspecialchars($contact['last_name'] ?: "--") ?></td>
+                                <td><?= htmlspecialchars($contact['contact_owner'] ?: "--") ?></td>
+                                <td><?= htmlspecialchars($contact['phone'] ?: "--") ?></td>
+                                <td><?= htmlspecialchars($contact['lifecycle_stage'] ?: "--") ?></td>
+                                <td><?= htmlspecialchars($contact['lead_status'] ?: "--") ?></td>
+                                <td><?= date('d M Y, h:i A', strtotime($contact['created_at']) ?: "--") ?></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
@@ -139,7 +138,7 @@ if (isset($contact)) {
 <footer class="footer">
     <p>&copy; <?= date('Y') ?> CRM System. All rights reserved.</p>
 </footer>
-</div>
+</div> 
 
 <!-- Script to auto-hide success alert after 4 seconds -->
 <script>

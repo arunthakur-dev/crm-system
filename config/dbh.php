@@ -1,5 +1,6 @@
 <?php
 
+// Database handler connected with "crm-system" database
 class Dbh {
     private $pdo;
 

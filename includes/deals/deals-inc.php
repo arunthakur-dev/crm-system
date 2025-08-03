@@ -35,9 +35,6 @@ if (!empty($search)) {
     $deals = $dealsController->getSearchedDeals($user_id, $search, $filter, $sort, $order);
 } else {
     switch ($filter) {
-        case 'my':
-            $deals = $dealsController->getSortedMyDeals($user_id, $sort, $order);
-            break;
         case 'recent':
             $deals = $dealsController->getRecentSortedDeals($user_id, 10, $sort, $order);
             break;

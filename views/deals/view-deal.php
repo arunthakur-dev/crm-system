@@ -6,6 +6,7 @@ require_once __DIR__ . '/_delete-deal-form.php';
 
 require_once __DIR__ . '/add-company-form.php';
 require_once __DIR__ . '/add-contact-form.php';
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,8 +17,9 @@ require_once __DIR__ . '/add-contact-form.php';
     <link rel="stylesheet" href="/../../public/assets/css/dashboard.css">
     <link rel="stylesheet" href="/../../public/assets/css/add-contact.css">
     <link rel="stylesheet" href="/../../public/assets/css/associated-tables.css">
-    <script defer src="../../public/assets/js/edit-company.js"></script>
-    <script defer src="../../public/assets/js/sidebar-forms.js"></script>
+    <script defer src="/../../public/assets/js/edit-company.js"></script>
+    <script defer src="/../../public/assets/js/sidebar-forms.js"></script>
+
 </head>
 <body>
 <div class="wrapper">
@@ -47,12 +49,12 @@ require_once __DIR__ . '/add-contact-form.php';
 
             <!-- Actions -->
             <div class="company-actions">
-                <button title="Note">📝</button>
-                <button title="Email">✉️</button>
-                <button title="Call">📞</button>
-                <button title="Task">✅</button>
-                <button title="Meeting">📅</button>
-                <button title="More">⋯</button>
+                <button title="Note">🗒</button>
+                <button title="Email">&#9993;</button>
+                <button title="Call">&#9742;</button>
+                <button title="Task">&#10004;</button>
+                <button title="Meeting">&#128197;</button>
+                <button title="More">&#8942;</button>
             </div>
 
             <!-- About -->
@@ -133,7 +135,19 @@ require_once __DIR__ . '/add-contact-form.php';
                             <tbody>
                                 <?php foreach ($dealContacts as $contact): ?>
                                     <tr>
-                                        <td><?= htmlspecialchars($contact['first_name'] . ' ' . $contact['last_name']) ?></td>
+                                        <td>
+                                            <div class="avatar-name">
+                                                <div class="avatar-circle">
+                                                    <?= strtoupper(substr($contact['first_name'], 0, 1)) ?>
+                                                </div>
+                                                <form method="POST" action="../contacts/view-contact.php" style="display:inline;">
+                                                    <input type="hidden" name="contact_id" value="<?= $contact['contact_id'] ?>">
+                                                    <button type="submit" class="link-button">
+                                                        <strong><?= htmlspecialchars($contact['first_name'] . ' ' . $contact['last_name'] ?? '') ?></strong>
+                                                    </button>
+                                                </form>
+                                        </td>
+                                        
                                         <td><?= htmlspecialchars($contact['email']) ?></td>
                                         <td><?= htmlspecialchars($contact['phone']) ?></td>
                                     </tr>
@@ -164,9 +178,20 @@ require_once __DIR__ . '/add-contact-form.php';
                             <tbody>
                                 <?php foreach ($dealCompanies as $company): ?>
                                     <tr>
-                                        <td><?= htmlspecialchars($company['name']) ?></td>
-                                        <td><?= htmlspecialchars($company['industry']) ?></td>
-                                        <td><?= htmlspecialchars($company['country']) ?></td>
+                                        <td>
+                                            <div class="avatar-name">
+                                                <div class="avatar-circle">
+                                                    <?= strtoupper(substr($company['name'], 0, 1)) ?>
+                                                </div>
+                                                <form method="POST" action="../companies/view-company.php" style="display:inline;">
+                                                    <input type="hidden" name="company_id" value="<?= $company['company_id'] ?>">
+                                                    <button type="submit" class="link-button">
+                                                        <strong><?= htmlspecialchars($company['name']  ?? '') ?></strong>
+                                                    </button>
+                                                </form>
+                                        </td>
+                                        <td><?= htmlspecialchars($company['industry']) ?: '--' ?></td>
+                                        <td><?= htmlspecialchars($company['country']) ?: '--'?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -183,3 +208,91 @@ require_once __DIR__ . '/add-contact-form.php';
 </div>
 </body>
 </html>
+<script>
+// ===== Deal Field Modal Logic =====
+
+const dealFieldModal = document.getElementById('deal-editable-field');
+const dealFieldForm = document.getElementById('dealFieldForm');
+const fieldNameInput = document.getElementById('deal_field_name');
+const fieldValueInput = document.getElementById('deal_field_value');
+const fieldLabel = document.getElementById('deal_field_label');
+
+// Trigger modal on inline-edit-btn click
+document.querySelectorAll('.editable-field').forEach(field => {
+    const editBtn = field.querySelector('.inline-edit-btn');
+
+    if (!editBtn) return; // Defensive
+
+    editBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+
+        const fieldKey = field.dataset.field;
+        const rawValue = field.dataset.value || '';
+        const label = field.querySelector('label')?.innerText || 'Field';
+
+        // Set form values
+        fieldNameInput.value = fieldKey;
+        fieldValueInput.value = rawValue;
+        fieldLabel.innerText = label;
+
+        // Optional: Adjust input type based on field type
+        if (fieldKey === 'created_at') {
+            fieldValueInput.type = 'datetime-local';
+            // Convert PHP date string to input format if needed
+            try {
+                const isoString = new Date(rawValue).toISOString().slice(0, 16);
+                fieldValueInput.value = isoString;
+            } catch {}
+        } else {
+            fieldValueInput.type = 'text';
+        }
+
+        // Show modal
+        dealFieldModal.style.display = 'flex';
+    });
+});
+
+// Close modal logic
+document.querySelectorAll('.close-about-modal').forEach(btn => {
+    btn.addEventListener('click', () => {
+        dealFieldModal.style.display = 'none';
+    });
+});
+
+// Dismiss modal when clicking outside
+window.addEventListener('click', function (e) {
+    if (e.target === dealFieldModal) {
+        dealFieldModal.style.display = 'none';
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const editBtn = document.querySelector('.edit-deal-btn');
+    const modal = document.getElementById('editDealModal');
+    const closeBtn = modal?.querySelector('.close-modal');
+
+    if (!editBtn || !modal || !closeBtn) {
+        console.warn('Edit modal elements not found. Is _edit-deal-form.php loaded correctly?');
+        return;
+    }
+
+    editBtn.addEventListener('click', () => {
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    });
+
+    closeBtn.addEventListener('click', () => {
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+    });
+
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+    });
+});
+
+
+</script>

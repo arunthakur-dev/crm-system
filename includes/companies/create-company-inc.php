@@ -1,7 +1,7 @@
 <?php
 require_once '../../models/companies-model.php';
 require_once '../../controllers/companies-controller.php';
-require_once '../../config/session-config.php'; // using session-baseduser_id
+require_once '../../config/session-config.php'; 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Collect and sanitize form data
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                      $industry, $country, $state,
                                      $postal_code, $employees, $notes);
 
-    // Redirect after success (optional)
+    // Redirect after success 
     header('Location: /../../views/companies/companies.php?status=success');
     exit;
 }

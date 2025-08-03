@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../config/dbh.php'; // adjust as needed
+require_once __DIR__ . '/../../config/dbh.php'; 
 require_once __DIR__ . '/../../config/session-config.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

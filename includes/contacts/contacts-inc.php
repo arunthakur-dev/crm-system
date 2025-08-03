@@ -6,7 +6,6 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// $company_id = $_POST['company_id'] ?? $_SESSION['company_id'];
 $sort = $_GET['sort'] ?? 'created_at'; // default sort
 $order = strtolower($_GET['order'] ?? 'desc'); // default order
 
@@ -29,9 +28,6 @@ if (!empty($search)) {
     $contacts = $contactsController->getSearchedContacts($_SESSION['user_id'], $search, $filter, $sort, $order);
 } else {
     switch ($filter) {
-        case 'my':
-            $contacts = $contactsController->getSortedMyContacts($_SESSION['user_id'], $sort, $order);
-            break;
         case 'recent':
             $contacts = $contactsController->getRecentSortedContacts($_SESSION['user_id'], 10, $sort, $order);
             break;

@@ -154,6 +154,7 @@ body {
   justify-content: space-between;
   border-top: 2px solid #a3a9b1;
   border-bottom: 2px solid #a3a9b1;
+  font-weight: 400;
   padding: 20px 0;
   margin-bottom: 25px;
 }
@@ -300,6 +301,8 @@ body {
 }
 
 .modal-content input[type="text"],
+.modal-content input[type="number"],
+.modal-content input[type="date"],
 .modal-content input[type="file"] {
   width: 100%;
   padding: 10px 12px;
@@ -412,4 +415,22 @@ body {
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
+}
+
+#editDealModal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
+}
+
+#editDealModal .modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    width: 500px;
+    max-width: 90%;
 }

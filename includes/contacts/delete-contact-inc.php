@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
 
         if ($stmt->execute()) {
-            unset($_SESSION['contact_id']); // Optional cleanup
+            unset($_SESSION['contact_id']);  
             header("Location: /../../views/contacts/contacts.php?deleted=1");
             exit();
         } else {

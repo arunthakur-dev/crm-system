@@ -1,11 +1,6 @@
 <?php
 require_once __DIR__ . '/../config/session-config.php';
 
-// Block caching
-header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache");
-
 // Block access without login
 if (!isset($_SESSION['user_id'])) {
     header('Location: /public/index.php');
@@ -19,12 +14,12 @@ require_once __DIR__ . '/../models/companies-model.php';
 require_once __DIR__ . '/../models/contacts-model.php';
 require_once __DIR__ . '/../models/deals-model.php';
 $companyModel = new CompaniesModel();
-// $contactModel = new ContactModel();
-// $dealModel    = new DealModel();
+$contactModel = new ContactsModel();
+$dealModel    = new DealsModel();
 
-$recentCompanies = $companyModel->fetchRecentSortedCompanies($user_id, 5);
-// $recentContacts  = $contactModel->getRecentContacts($user_id, 5);
-// $recentDeals     = $dealModel->getRecentDeals($user_id, 5);
+$recentCompanies = $companyModel->fetchRecentSortedCompanies($user_id, 7);
+$recentContacts  = $contactModel->getSortedRecentContacts($user_id, 7);
+$recentDeals     = $dealModel->getSortedRecentDeals($user_id, 7);
 ?>
 
 <!DOCTYPE html>
@@ -65,7 +60,7 @@ $recentCompanies = $companyModel->fetchRecentSortedCompanies($user_id, 5);
                         <li>No companies yet.</li>
                     <?php endif; ?>
                     <?php foreach ($recentCompanies as $company): ?>
-                        <li><strong>Company Name: </strong><?= htmlspecialchars($company['name']) ?>, <strong>Industry: </strong><?= htmlspecialchars($company['industry']) ?>,</li>
+                        <li><strong>Company Name: </strong><?= htmlspecialchars($company['name'] ?: "--") ?>,   <strong>Industry: </strong><?= htmlspecialchars($company['industry'] ?: "--") ?></li>
                     <?php endforeach; ?>
                 </ol>
             </section>
@@ -73,7 +68,7 @@ $recentCompanies = $companyModel->fetchRecentSortedCompanies($user_id, 5);
                 <h3>Recent Contacts</h3>
                 <ul class="item-list">
                     <?php foreach ($recentContacts as $contact): ?>
-                        <li><?= htmlspecialchars($contact['full_name']) ?> - <?= htmlspecialchars($contact['email']) ?></li>
+                        <li><strong>Name: </strong><?= htmlspecialchars($contact['first_name'] ?: "--" . " " . $contact['last_name'] ?: "--" )?>,   <strong>Email: </strong> <?= htmlspecialchars($contact['email'] ?: "--") ?>,    <strong>Phone: </strong> <?= htmlspecialchars($contact['phone'] ?: "--") ?> </li>
                     <?php endforeach; ?>
                     <?php if (empty($recentContacts)): ?>
                         <li>No contacts added.</li>
@@ -87,7 +82,7 @@ $recentCompanies = $companyModel->fetchRecentSortedCompanies($user_id, 5);
                 <h3>Recent Deals</h3>
                 <ul class="item-list">
                     <?php foreach ($recentDeals as $deal): ?>
-                        <li><?= htmlspecialchars($deal['title']) ?> - ₹<?= number_format($deal['value'], 2) ?></li>
+                        <li><strong>Title: </strong><?= htmlspecialchars($deal['title']) ?>,    <strong>Amount: </strong> ₹<?= number_format($deal['amount'], 2) ?>,   <strong>Close Date: </strong><?= htmlspecialchars($deal['close_date']) ?></li>
                     <?php endforeach; ?>
                     <?php if (empty($recentDeals)): ?>
                         <li>No deals found.</li>
@@ -96,12 +91,12 @@ $recentCompanies = $companyModel->fetchRecentSortedCompanies($user_id, 5);
             </section>
             <section class="dashboard-box">
                 <h3>+ Add new Section</h3>
-                <a href="/../views/companies/create-company.php" class="create-btn">+ Create New Section</a>
+                <a href="" class="create-btn">+ Create New Section</a>
             </section>
         </div>     
     </main>
 
-<!-- Footer -->
+    <!-- Footer -->
     <footer class="footer">
         <p>&copy; <?= date('Y') ?> CRM System. All rights reserved.</p>
     </footer>

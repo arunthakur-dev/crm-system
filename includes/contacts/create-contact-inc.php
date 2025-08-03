@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $contactController = new ContactsController();
     $contactController->createContact($user_id, $email, $first_name, $last_name, $contact_owner, $phone, $lifecycle_stage, $lead_status);
 
-    // Redirect after success (optional)
+    // Redirect after success 
     header('Location: /../views/contacts/contacts.php?status=success');
     exit;
 }

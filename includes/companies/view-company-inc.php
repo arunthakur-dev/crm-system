@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../config/session-config.php';
+require_once __DIR__ . '/../../models/companies-model.php';
 require_once __DIR__ . '/../../controllers/companies-controller.php';
 
 if (!isset($_SESSION['user_id'])) {
@@ -17,8 +18,9 @@ if (!isset($_SESSION['company_id']) || !is_numeric($_SESSION['company_id'])) {
     die("No company selected or invalid session.");
 }
 
-$companiesController = new CompaniesController();
-$contactCompanies = $companiesController->getCompaniesForContact($_SESSION['contact_id'], $_SESSION['user_id']);
+$companiesModel = new CompaniesModel();
+$companyContacts = $companiesModel->fetchContactsForCompany($_SESSION['company_id'], $_SESSION['user_id']);
+$companyDeals = $companiesModel->fetchDealsForCompany($_SESSION['company_id'], $_SESSION['user_id']);
 
 $company_id = $_SESSION['company_id'];
 $user_id = $_SESSION['user_id'];

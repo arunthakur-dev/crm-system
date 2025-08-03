@@ -25,7 +25,7 @@
 
 
 <!-- Edit Deal About Field Modal -->
-<div id="editAboutFieldModal" class="modal">
+<div id="deal-editable-field" class="modal">
     <div class="modal-content">
         <h2>Edit Field</h2>
         <form id="dealFieldForm" action="/../../includes/deals/update-deal-field-inc.php" method="POST">

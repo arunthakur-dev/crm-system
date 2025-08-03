@@ -66,7 +66,7 @@ class RegisterController extends RegisterModel {
         exit();
     }
 
-    // All good, insert user
+    // If All good, insert user
     $hashedPwd = password_hash($this->pwd, PASSWORD_DEFAULT);
     $this->setUser($this->username, $this->email, $hashedPwd, $this->company_name);
     $_SESSION['success_register'] = "Registration successful! You can now login.";

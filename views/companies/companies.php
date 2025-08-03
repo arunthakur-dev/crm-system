@@ -64,7 +64,6 @@ require_once __DIR__ . '/../../includes/companies/companies-inc.php';
         </div>
         <div class="company-tabs">
             <a href="?filter=all" class="tab-link <?= (!isset($_GET['filter']) || $_GET['filter'] === 'all') ? 'active' : '' ?>">All companies</a>
-            <a href="?filter=my" class="tab-link <?= (isset($_GET['filter']) && $_GET['filter'] === 'my') ? 'active' : '' ?>">My companies</a>
             <a href="?filter=recent" class="tab-link <?= (isset($_GET['filter']) && $_GET['filter'] === 'recent') ? 'active' : '' ?>">Recently Added</a>
         </div>
         </div><br>
@@ -126,24 +125,24 @@ require_once __DIR__ . '/../../includes/companies/companies-inc.php';
                         <tr><td colspan="10">No companies found.</td></tr>
                     <?php else: ?>
                         <?php foreach ($companies as $company): ?>
-                            <tr>
+                            <tr> 
                                 <td>
                                     <form method="POST" action="view-company.php" style="display:inline;">
                                         <input type="hidden" name="company_id" value="<?= $company['company_id'] ?>">
                                         <button type="submit" class="link-button">
-                                            <strong><?= htmlspecialchars($company['name']) ?></strong>
+                                            <strong><?= htmlspecialchars($company['name'] ?: "--") ?></strong>
                                         </button>
                                     </form>
                                 </td>
-                                <td><?= htmlspecialchars($company['company_domain']) ?></td>
-                                <td><?= htmlspecialchars($company['owner']) ?></td>
-                                <td><?= htmlspecialchars($company['industry']) ?></td>
-                                <td><?= htmlspecialchars($company['country']) ?></td>
-                                <td><?= htmlspecialchars($company['state']) ?></td>
-                                <td><?= htmlspecialchars($company['postal_code']) ?></td>
-                                <td><?= htmlspecialchars($company['employees']) ?></td>
-                                <td><?= htmlspecialchars($company['notes']) ?></td>
-                                <td><?= date('d M Y, h:i A', strtotime($company['created_at'])) ?></td>
+                                <td><?= htmlspecialchars($company['company_domain'] ?: "--") ?></td>
+                                <td><?= htmlspecialchars($company['owner'] ?: "--") ?></td>
+                                <td><?= htmlspecialchars($company['industry'] ?: "--") ?></td>
+                                <td><?= htmlspecialchars($company['country'] ?: "--") ?></td>
+                                <td><?= htmlspecialchars($company['state'] ?: "--") ?></td>
+                                <td><?= htmlspecialchars($company['postal_code'] ?: "--") ?></td>
+                                <td><?= htmlspecialchars($company['employees'] ?: "--") ?></td>
+                                <td><?= htmlspecialchars($company['notes'] ?: "--") ?></td>
+                                <td><?= date('d M Y, h:i A', strtotime($company['created_at']) ?: "--") ?></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
@@ -151,12 +150,12 @@ require_once __DIR__ . '/../../includes/companies/companies-inc.php';
             </table>
         </div>
     </main>
-<?php
-if (isset($company)) {
-    // Store company ID in session for later use
-    $_SESSION['company_id'] = $company['company_id'];
-}  
-?>
+    <?php
+    if (isset($company)) {
+        // Store company ID in session for later use
+        $_SESSION['company_id'] = $company['company_id'];
+    }  
+    ?>
     <!-- Footer -->
     <footer class="footer">
         <p>&copy; <?= date('Y') ?> CRM System. All rights reserved.</p>

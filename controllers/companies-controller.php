@@ -18,7 +18,6 @@ class CompaniesController extends CompaniesModel {
     public function createCompany($user_id, $company_domain, $name, $owner,
         $industry, $country, $state, $postal_code, $employees, $notes) {
          
-        // Call Model
         $this->insertCompany(
             $user_id, $company_domain, $name, $owner,
             $industry, $country, $state,
@@ -30,20 +29,12 @@ class CompaniesController extends CompaniesModel {
         return $this->fetchCompanyById($company_id, $user_id);
     }
 
-    public function getCompanyById($company_id, $user_id) {
-        return $this->fetchCompanyById($company_id, $user_id);
-    }
-
     public function getRecentSortedCompanies($user_id, $limit = 10, $sort = 'created_at', $order = 'desc') {
         return $this->fetchRecentSortedCompanies($user_id, $limit, $sort, $order);
     }
 
     public function getSortedCompanies($user_id, $sort, $order) {
         return $this->fetchSortedCompanies($user_id, $sort, $order);
-    }
-
-    public function getSortedMyCompanies($user_id, $sort, $order) {
-        return $this->fetchSortedMyCompanies($user_id,  $sort, $order);
     }
 
     public function getSearchedCompanies($user_id, $searchTerm, $filter = 'all', $sort = 'created_at', $order = 'desc') {
@@ -54,24 +45,18 @@ class CompaniesController extends CompaniesModel {
         return $this->fetchCompaniesByUser($user_id);
     }
 
-    public function getCompaniesForContact($contact_id, $user_id) {
-        return $this->fetchCompaniesForContact($contact_id, $user_id);
-    }
-    // Update company 
     public function updateCompany($company_id, $user_id, $company_domain, $name, $owner,
                               $industry, $country, $state, $postal_code, $employees, $notes) {
         if (empty($name)) {
             die("Company name is required.");
         }
 
-        // Call the model function 
         $this->updateCompany(
             $company_id, $user_id, $company_domain, $name, $owner,
             $industry, $country, $state, $postal_code, $employees, $notes
         );
     }
 
-    // Delete company
     public function deleteCompany($company_id, $user_id) {
         parent::deleteCompany($company_id, $user_id);
     }

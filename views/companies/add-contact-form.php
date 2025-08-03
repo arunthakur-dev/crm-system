@@ -4,7 +4,7 @@ ob_start();
 require_once __DIR__ . '/../../controllers/contacts-controller.php';
 
 $contactController = new ContactsController();
-$user_id = $_SESSION['user_id']; // assuming user_id is stored in session
+$user_id = $_SESSION['user_id'];  
 $allContacts = $contactController->getContactsByUser($user_id);
 
 ?>
@@ -23,8 +23,8 @@ $allContacts = $contactController->getContactsByUser($user_id);
 
     <!-- Tab Content Wrapper -->
     <div class="tab-content-wrapper">
+
         <!-- Create New Contact Form -->
-        
         <form action="/includes/contacts/link-contact-to-company.php" method="POST" class="tab-content active" id="new">
             <input type="hidden" name="company_id" value="<?= $company['company_id'] ?>">
             <label for="email">Email </label>

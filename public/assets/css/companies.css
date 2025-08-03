@@ -46,8 +46,6 @@ body {
     color: #c0392b;
 }
 
-
-
 header {
     display: flex;
     justify-content: space-between;
@@ -63,7 +61,8 @@ header h1 {
 .actions {
     display: flex;
     gap: 1rem;
-    align-items: center;
+    /* align-items: center; */
+    font-weight: 400;
 }
 
 .search-input {
@@ -95,6 +94,7 @@ header h1 {
     border: 2px solid #d1dbe5;
     box-shadow: -2 1px 3px rgba(158, 154, 154, 0.1);
     overflow-x: auto;
+    font-weight: 400;
 }
 
 table {
