@@ -4,6 +4,7 @@ class CompaniesController extends CompaniesModel {
     private $user_id, $company_domain, $name, $owner,
             $industry, $country, $state, $postal_code, $employees, $notes;
 
+    // Null for safety
     public function __construct(
         $user_id = null, $company_domain = null, $name = null, $owner = null,
         $industry = null, $country = null, $state = null, $postal_code = null,

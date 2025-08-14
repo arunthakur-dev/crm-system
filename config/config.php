@@ -1,5 +1,5 @@
 <?php
-    // Database credentials
+    // Database credentials for security
     define('DB_HOST', 'localhost');
     define('DB_USER', 'root');
     define('DB_PASS', '');  

@@ -149,7 +149,7 @@ class CompaniesModel extends Dbh {
         $validSortFields = ['name', 'company_domain', 'owner', 'industry', 'country', 'state', 'postal_code', 'employees', 'created_at'];
         $validOrders = ['asc', 'desc'];
 
-        // Sanitize
+        // Sanitize the sort and order fields
         if (!in_array($sort, $validSortFields)) {
             $sort = 'created_at';
         }
